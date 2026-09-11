@@ -9,9 +9,7 @@ import { CheckoutStepper } from "@/components/ui/CheckoutStepper";
 import { DataTable, type DataTableColumn } from "@/components/ui/DataTable";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { FilterPanel, type FilterGroup, type FilterOptionRef } from "@/components/ui/FilterPanel";
-import { Footer } from "@/components/ui/Footer";
 import { Gallery } from "@/components/ui/Gallery";
-import { Header } from "@/components/ui/Header";
 import { PackagingPicker } from "@/components/ui/PackagingPicker";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { RarityTag } from "@/components/ui/RarityTag";
@@ -19,128 +17,17 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { SpecSheet } from "@/components/ui/SpecSheet";
 import { StatBand } from "@/components/ui/StatBand";
 import { Timeline } from "@/components/ui/Timeline";
-import { ToastProvider, useToast } from "@/components/ui/Toast";
+import { useToast } from "@/components/ui/Toast";
 import { WaitlistForm } from "@/components/ui/WaitlistForm";
-import type {
-  OrderStage,
-  PackagingLevel,
-  PackagingLevelId,
-  ProductSummary,
-  Rarity,
-} from "@/types/product";
+import { MOCK_ORDER_STAGES } from "@/content/mock-order-stages";
+import { PACKAGING_LEVELS } from "@/content/mock-packaging";
+import { MOCK_PRODUCTS } from "@/content/mock-products";
+import type { PackagingLevelId, Rarity } from "@/types/product";
 
-const PRODUCTS: ProductSummary[] = [
-  {
-    id: "1",
-    slug: "air-jordan-1-tokyo",
-    brand: "Nike",
-    name: "Air Jordan 1 Retro High OG",
-    referencia: "NSE-0142",
-    priceCents: 189000,
-    rarity: "raro",
-    images: { primary: "" },
-    origin: "Tóquio",
-    stockAvailable: 1,
-    stockTotal: 2,
-  },
-  {
-    id: "2",
-    slug: "supreme-box-logo",
-    brand: "Supreme",
-    name: "Box Logo Hoodie",
-    referencia: "NSE-0098",
-    priceCents: 420000,
-    rarity: "peca-unica",
-    images: { primary: "" },
-    origin: "Nova York",
-    stockAvailable: 1,
-    stockTotal: 1,
-  },
-  {
-    id: "3",
-    slug: "bape-shark-hoodie",
-    brand: "BAPE",
-    name: "Shark Full Zip Hoodie",
-    referencia: "NSE-0075",
-    priceCents: 265000,
-    rarity: "limitado",
-    images: { primary: "" },
-    origin: "Osaka",
-    stockAvailable: 3,
-    stockTotal: 5,
-  },
-];
+const PRODUCTS = MOCK_PRODUCTS.slice(0, 3);
+const ORDER_STAGES = MOCK_ORDER_STAGES;
 
 const RARITIES: Rarity[] = ["comum", "limitado", "raro", "peca-unica"];
-
-const PACKAGING_LEVELS: PackagingLevel[] = [
-  {
-    id: "padrao",
-    label: "Nível 01",
-    name: "Padrão",
-    description: "Caixa original protegida, plástico bolha, lacre NSE. Incluso em todo pedido.",
-    priceCents: 0,
-    extraBusinessDays: 0,
-  },
-  {
-    id: "avancada",
-    label: "Nível 02",
-    name: "Avançada",
-    description:
-      "Caixa externa rígida, espuma sob medida, papel seda, cartão de procedência assinado.",
-    priceCents: 8000,
-    extraBusinessDays: 0,
-  },
-  {
-    id: "personalizada",
-    label: "Nível 03",
-    name: "Personalizada",
-    description:
-      "Caixa de colecionador, sílica, proteção UV, gravação do nome, certificado numerado.",
-    priceCents: "consulta",
-    extraBusinessDays: 3,
-  },
-];
-
-const STAGE_TEXT = [
-  {
-    id: "aquisicao",
-    label: "Aquisição na origem",
-    duration: "5–10 dias úteis",
-    description: "Compra confirmada na filial ou no fornecedor autorizado do país de origem.",
-  },
-  {
-    id: "conferencia",
-    label: "Conferência internacional",
-    duration: "3–5 dias úteis",
-    description: "Autenticidade, numeração, estado e acessórios verificados e fotografados.",
-  },
-  {
-    id: "transito",
-    label: "Trânsito internacional",
-    duration: "10–18 dias úteis",
-    description: "Consolidação e voo até o Brasil.",
-  },
-  {
-    id: "alfandega",
-    label: "Liberação alfandegária",
-    duration: "5–15 dias úteis",
-    description: "A etapa que não controlamos — e por isso a que mais precisa ser explicada.",
-  },
-  {
-    id: "entrega",
-    label: "Embalagem e entrega",
-    duration: "2–5 dias úteis",
-    description: "Embalagem no nível escolhido, foto final enviada ao cliente, despacho nacional.",
-  },
-];
-
-const ORDER_STAGES: OrderStage[] = STAGE_TEXT.map((stage, index) => ({
-  ...stage,
-  order: index + 1,
-  status: index < 2 ? "concluida" : index === 2 ? "atual" : "futura",
-  dateLabel: index < 2 ? "concluída" : index === 2 ? "em andamento" : undefined,
-}));
 
 const FILTER_GROUPS: FilterGroup[] = [
   {
@@ -245,9 +132,7 @@ export default function EstiloPage() {
   }
 
   return (
-    <ToastProvider>
-      <Header cartCount={CART_LINES.length} />
-
+    <>
       <main className="nse-container pt-32">
         <h1 className="text-[40px] leading-tight tracking-tight text-marfim">
           Guia de estilo — NSEImports
@@ -450,8 +335,6 @@ export default function EstiloPage() {
           </div>
         </Section>
       </main>
-
-      <Footer />
-    </ToastProvider>
+    </>
   );
 }

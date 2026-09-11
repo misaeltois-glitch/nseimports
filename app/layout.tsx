@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Archivo, JetBrains_Mono } from "next/font/google";
+import { Footer } from "@/components/ui/Footer";
+import { Header } from "@/components/ui/Header";
+import { ToastProvider } from "@/components/ui/Toast";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -27,7 +30,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${archivo.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-onix text-marfim">
-        {children}
+        <ToastProvider>
+          <Header cartCount={0} />
+          <div className="flex flex-1 flex-col">{children}</div>
+          <Footer />
+        </ToastProvider>
       </body>
     </html>
   );
