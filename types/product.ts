@@ -13,6 +13,16 @@ export const RARITY_LABEL: Record<Rarity, string> = {
   "peca-unica": "Peça única",
 };
 
+export type Category = "tenis" | "moletom" | "bone" | "jaqueta" | "acessorio";
+
+export const CATEGORY_LABEL: Record<Category, string> = {
+  tenis: "Tênis",
+  moletom: "Moletom",
+  bone: "Boné",
+  jaqueta: "Jaqueta",
+  acessorio: "Acessório",
+};
+
 export interface ProductImages {
   primary: string;
   secondary?: string;
@@ -26,10 +36,13 @@ export interface ProductSummary {
   referencia: string;
   priceCents: number;
   rarity: Rarity;
+  category: Category;
   images: ProductImages;
   origin: string;
   stockAvailable: number;
   stockTotal: number;
+  /** Dias úteis restantes até a chegada — usado na ordenação "menor prazo" (BRIEF.md, seção 06 — Arquivo). */
+  diasRestantes: number;
 }
 
 export type PackagingLevelId = "padrao" | "avancada" | "personalizada";

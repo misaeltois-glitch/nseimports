@@ -5,10 +5,19 @@ import { ArrivalEstimate } from "./ArrivalEstimate";
 import { ImagePlaceholder } from "./ImagePlaceholder";
 import { RarityTag } from "./RarityTag";
 
-/** Card de catálogo/arquivo recente (BRIEF.md, seções 06 e 09). */
+/**
+ * Card de catálogo/arquivo recente (BRIEF.md, seções 06 e 09). Esgotados
+ * continuam visíveis a 40% de opacidade com "avisar quando voltar" — o
+ * arquivo também é vitrine de reputação.
+ */
 export function ProductCard({ product }: { product: ProductSummary }) {
+  const isSoldOut = product.stockAvailable === 0;
+
   return (
-    <Link href={`/arquivo/${product.slug}`} className="group block">
+    <Link
+      href={`/arquivo/${product.slug}`}
+      className={`group block ${isSoldOut ? "opacity-40" : ""}`}
+    >
       <div className="relative">
         <ImagePlaceholder
           label="Estúdio"
@@ -37,10 +46,16 @@ export function ProductCard({ product }: { product: ProductSummary }) {
       </div>
 
       <div className="mt-2 flex items-center justify-between gap-2">
-        <ArrivalEstimate variant="compacta" />
-        <span className="font-mono text-[11px] text-marfim/0 transition-colors duration-[400ms] group-hover:text-marfim/45">
-          {product.origin} · {formatStockLabel(product.stockAvailable, product.stockTotal)}
-        </span>
+        {isSoldOut ? (
+          <span className="kicker text-marfim/60">Avisar quando voltar</span>
+        ) : (
+          <>
+            <ArrivalEstimate variant="compacta" />
+            <span className="font-mono text-[11px] text-marfim/0 transition-colors duration-[400ms] group-hover:text-marfim/45">
+              {product.origin} · {formatStockLabel(product.stockAvailable, product.stockTotal)}
+            </span>
+          </>
+        )}
       </div>
     </Link>
   );

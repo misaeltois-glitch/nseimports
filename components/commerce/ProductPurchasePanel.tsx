@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ArrivalEstimate } from "@/components/ui/ArrivalEstimate";
 import { Button } from "@/components/ui/Button";
 import { PackagingPicker } from "@/components/ui/PackagingPicker";
+import { WaitlistForm } from "@/components/ui/WaitlistForm";
 import { useToast } from "@/components/ui/Toast";
 import type { ArrivalWindow } from "@/lib/business-days";
 import { formatInstallments, formatPriceBRL } from "@/lib/format";
@@ -27,13 +28,28 @@ export function ProductPurchasePanel({
   const [size, setSize] = useState<string | null>(null);
   const [packaging, setPackaging] = useState<PackagingLevelId>("padrao");
   const { show } = useToast();
+  const hasSizes = product.sizes.length > 0;
 
   function handleReserve() {
-    if (!size) {
+    if (hasSizes && !size) {
       show("Escolha um tamanho antes de reservar.", "erro");
       return;
     }
     show("Peça reservada por 30 minutos.");
+  }
+
+  if (product.stockAvailable === 0) {
+    return (
+      <div className="flex flex-col gap-6">
+        <div>
+          <p className="font-mono text-[26px] text-marfim">{formatPriceBRL(product.priceCents)}</p>
+          <p className="mt-2 text-[14px] text-marfim/70">
+            Fora do arquivo. Avise-me quando entrar uma peça equivalente.
+          </p>
+        </div>
+        <WaitlistForm variant="compacto" />
+      </div>
+    );
   }
 
   return (
@@ -55,6 +71,7 @@ export function ProductPurchasePanel({
         </p>
       </div>
 
+      {hasSizes && (
       <div>
         <div className="mb-3 flex items-center justify-between">
           <span className="kicker text-marfim/50">Tamanho</span>
@@ -118,6 +135,7 @@ export function ProductPurchasePanel({
           ))}
         </div>
       </div>
+      )}
 
       <div>
         <span className="kicker mb-3 block text-marfim/50">Embalagem</span>

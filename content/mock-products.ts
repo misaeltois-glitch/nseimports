@@ -1,6 +1,6 @@
 /**
- * Mock temporário de produtos, usado por /estilo e pela Home enquanto não
- * existe /content/products/*.json validado com Zod (BRIEF.md, seção 10).
+ * Mock temporário de produtos, usado por /estilo, Home e Arquivo enquanto
+ * não existe /content/products/*.json validado com Zod (BRIEF.md, seção 10).
  */
 import type { ProductSummary } from "@/types/product";
 
@@ -13,10 +13,12 @@ export const MOCK_PRODUCTS: ProductSummary[] = [
     referencia: "NSE-0142",
     priceCents: 189000,
     rarity: "raro",
+    category: "tenis",
     images: { primary: "" },
     origin: "Tóquio",
     stockAvailable: 1,
     stockTotal: 2,
+    diasRestantes: 38,
   },
   {
     id: "2",
@@ -26,10 +28,12 @@ export const MOCK_PRODUCTS: ProductSummary[] = [
     referencia: "NSE-0098",
     priceCents: 420000,
     rarity: "peca-unica",
+    category: "moletom",
     images: { primary: "" },
     origin: "Nova York",
-    stockAvailable: 1,
+    stockAvailable: 0,
     stockTotal: 1,
+    diasRestantes: 0,
   },
   {
     id: "3",
@@ -39,10 +43,12 @@ export const MOCK_PRODUCTS: ProductSummary[] = [
     referencia: "NSE-0075",
     priceCents: 265000,
     rarity: "limitado",
+    category: "moletom",
     images: { primary: "" },
     origin: "Osaka",
     stockAvailable: 3,
     stockTotal: 5,
+    diasRestantes: 12,
   },
   {
     id: "4",
@@ -52,10 +58,12 @@ export const MOCK_PRODUCTS: ProductSummary[] = [
     referencia: "NSE-0061",
     priceCents: 385000,
     rarity: "raro",
+    category: "jaqueta",
     images: { primary: "" },
     origin: "Milão",
     stockAvailable: 1,
     stockTotal: 3,
+    diasRestantes: 25,
   },
   {
     id: "5",
@@ -65,10 +73,12 @@ export const MOCK_PRODUCTS: ProductSummary[] = [
     referencia: "NSE-0113",
     priceCents: 148000,
     rarity: "comum",
+    category: "jaqueta",
     images: { primary: "" },
     origin: "Nova York",
     stockAvailable: 4,
     stockTotal: 6,
+    diasRestantes: 44,
   },
   {
     id: "6",
@@ -78,9 +88,41 @@ export const MOCK_PRODUCTS: ProductSummary[] = [
     referencia: "NSE-0129",
     priceCents: 176000,
     rarity: "limitado",
+    category: "jaqueta",
     images: { primary: "" },
     origin: "Londres",
     stockAvailable: 2,
     stockTotal: 4,
+    diasRestantes: 17,
+  },
+  {
+    id: "7",
+    slug: "new-era-59fifty-japan",
+    brand: "New Era",
+    name: "59FIFTY Fitted Cap Japan Exclusive",
+    referencia: "NSE-0084",
+    priceCents: 62000,
+    rarity: "limitado",
+    category: "bone",
+    images: { primary: "" },
+    origin: "Los Angeles",
+    stockAvailable: 5,
+    stockTotal: 8,
+    diasRestantes: 9,
+  },
+  {
+    id: "8",
+    slug: "chrome-hearts-cross-wallet",
+    brand: "Chrome Hearts",
+    name: "Cross Patch Wallet",
+    referencia: "NSE-0057",
+    priceCents: 340000,
+    rarity: "raro",
+    category: "acessorio",
+    images: { primary: "" },
+    origin: "Miami",
+    stockAvailable: 1,
+    stockTotal: 2,
+    diasRestantes: 33,
   },
 ];

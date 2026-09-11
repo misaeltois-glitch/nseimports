@@ -1,9 +1,11 @@
 /**
  * Mock temporário do dossiê de produto, usado pela rota /arquivo/[slug]
  * enquanto não existe /content/products/*.json validado com Zod
- * (BRIEF.md, seção 10).
+ * (BRIEF.md, seção 10). Os campos comuns vêm de mock-products.ts — aqui só
+ * o que é específico do dossiê (tamanhos, procedência, conferência, etc.).
  */
-import type { ProductDetail } from "@/types/product";
+import type { ProductDetail, ProvenanceInfo, SizeOption } from "@/types/product";
+import { MOCK_PRODUCTS } from "./mock-products";
 
 const CONFERENCIA_PADRAO = [
   "Etiqueta original conferida",
@@ -15,19 +17,16 @@ const CONFERENCIA_PADRAO = [
 
 const GALLERY_PADRAO = ["Estúdio", "Unidade recebida", "Detalhe", "Caixa"];
 
-export const MOCK_PRODUCT_DETAILS: ProductDetail[] = [
-  {
-    id: "1",
-    slug: "air-jordan-1-tokyo",
-    brand: "Nike",
-    name: "Air Jordan 1 Retro High OG",
-    referencia: "NSE-0142",
-    priceCents: 189000,
-    rarity: "raro",
-    images: { primary: "" },
-    origin: "Tóquio",
-    stockAvailable: 1,
-    stockTotal: 2,
+interface DetailExtras {
+  sizes: SizeOption[];
+  provenance: ProvenanceInfo;
+  conferencia: string[];
+  galleryLabels: string[];
+  relatedSlugs: string[];
+}
+
+const DETAIL_EXTRAS: Record<string, DetailExtras> = {
+  "air-jordan-1-tokyo": {
     sizes: [
       { label: "38", available: false },
       { label: "39", available: true },
@@ -46,22 +45,11 @@ export const MOCK_PRODUCT_DETAILS: ProductDetail[] = [
     galleryLabels: GALLERY_PADRAO,
     relatedSlugs: ["bape-shark-hoodie", "kith-quilted-vest"],
   },
-  {
-    id: "2",
-    slug: "supreme-box-logo",
-    brand: "Supreme",
-    name: "Box Logo Hoodie",
-    referencia: "NSE-0098",
-    priceCents: 420000,
-    rarity: "peca-unica",
-    images: { primary: "" },
-    origin: "Nova York",
-    stockAvailable: 1,
-    stockTotal: 1,
+  "supreme-box-logo": {
     sizes: [
       { label: "P", available: false },
       { label: "M", available: false },
-      { label: "G", available: true },
+      { label: "G", available: false },
       { label: "GG", available: false },
     ],
     provenance: {
@@ -74,18 +62,7 @@ export const MOCK_PRODUCT_DETAILS: ProductDetail[] = [
     galleryLabels: GALLERY_PADRAO,
     relatedSlugs: ["kith-quilted-vest", "palace-tri-ferg-jacket"],
   },
-  {
-    id: "3",
-    slug: "bape-shark-hoodie",
-    brand: "BAPE",
-    name: "Shark Full Zip Hoodie",
-    referencia: "NSE-0075",
-    priceCents: 265000,
-    rarity: "limitado",
-    images: { primary: "" },
-    origin: "Osaka",
-    stockAvailable: 3,
-    stockTotal: 5,
+  "bape-shark-hoodie": {
     sizes: [
       { label: "P", available: true },
       { label: "M", available: true },
@@ -102,18 +79,7 @@ export const MOCK_PRODUCT_DETAILS: ProductDetail[] = [
     galleryLabels: GALLERY_PADRAO,
     relatedSlugs: ["air-jordan-1-tokyo", "stone-island-shadow-jacket"],
   },
-  {
-    id: "4",
-    slug: "stone-island-shadow-jacket",
-    brand: "Stone Island",
-    name: "Shadow Project Jacket",
-    referencia: "NSE-0061",
-    priceCents: 385000,
-    rarity: "raro",
-    images: { primary: "" },
-    origin: "Milão",
-    stockAvailable: 1,
-    stockTotal: 3,
+  "stone-island-shadow-jacket": {
     sizes: [
       { label: "M", available: true },
       { label: "G", available: false },
@@ -129,18 +95,7 @@ export const MOCK_PRODUCT_DETAILS: ProductDetail[] = [
     galleryLabels: GALLERY_PADRAO,
     relatedSlugs: ["bape-shark-hoodie", "palace-tri-ferg-jacket"],
   },
-  {
-    id: "5",
-    slug: "kith-quilted-vest",
-    brand: "Kith",
-    name: "Quilted Vest",
-    referencia: "NSE-0113",
-    priceCents: 148000,
-    rarity: "comum",
-    images: { primary: "" },
-    origin: "Nova York",
-    stockAvailable: 4,
-    stockTotal: 6,
+  "kith-quilted-vest": {
     sizes: [
       { label: "P", available: true },
       { label: "M", available: true },
@@ -157,18 +112,7 @@ export const MOCK_PRODUCT_DETAILS: ProductDetail[] = [
     galleryLabels: GALLERY_PADRAO,
     relatedSlugs: ["air-jordan-1-tokyo", "supreme-box-logo"],
   },
-  {
-    id: "6",
-    slug: "palace-tri-ferg-jacket",
-    brand: "Palace",
-    name: "Tri-Ferg Track Jacket",
-    referencia: "NSE-0129",
-    priceCents: 176000,
-    rarity: "limitado",
-    images: { primary: "" },
-    origin: "Londres",
-    stockAvailable: 2,
-    stockTotal: 4,
+  "palace-tri-ferg-jacket": {
     sizes: [
       { label: "P", available: true },
       { label: "M", available: false },
@@ -185,7 +129,41 @@ export const MOCK_PRODUCT_DETAILS: ProductDetail[] = [
     galleryLabels: GALLERY_PADRAO,
     relatedSlugs: ["supreme-box-logo", "stone-island-shadow-jacket"],
   },
-];
+  "new-era-59fifty-japan": {
+    sizes: [
+      { label: "7", available: true },
+      { label: "7 1/4", available: true },
+      { label: "7 1/2", available: false },
+      { label: "7 3/4", available: true },
+    ],
+    provenance: {
+      filial: "New Era Los Angeles",
+      pais: "Estados Unidos",
+      dataAquisicao: "01/10/2026",
+      condicao: "Novo lacrado",
+    },
+    conferencia: CONFERENCIA_PADRAO,
+    galleryLabels: GALLERY_PADRAO,
+    relatedSlugs: ["bape-shark-hoodie", "palace-tri-ferg-jacket"],
+  },
+  "chrome-hearts-cross-wallet": {
+    sizes: [],
+    provenance: {
+      filial: "Chrome Hearts Miami",
+      pais: "Estados Unidos",
+      dataAquisicao: "20/09/2026",
+      condicao: "Usado grau A",
+    },
+    conferencia: CONFERENCIA_PADRAO,
+    galleryLabels: GALLERY_PADRAO,
+    relatedSlugs: ["supreme-box-logo", "stone-island-shadow-jacket"],
+  },
+};
+
+export const MOCK_PRODUCT_DETAILS: ProductDetail[] = MOCK_PRODUCTS.map((product) => ({
+  ...product,
+  ...DETAIL_EXTRAS[product.slug],
+}));
 
 export function getProductDetailBySlug(slug: string): ProductDetail | undefined {
   return MOCK_PRODUCT_DETAILS.find((product) => product.slug === slug);
