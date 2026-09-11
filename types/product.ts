@@ -55,3 +55,24 @@ export interface OrderStage {
   status: OrderStageStatus;
   dateLabel?: string;
 }
+
+export interface SizeOption {
+  label: string;
+  available: boolean;
+}
+
+export interface ProvenanceInfo {
+  filial: string;
+  pais: string;
+  dataAquisicao: string;
+  condicao: string;
+}
+
+/** Ficha completa do dossiê de produto (BRIEF.md, seção 06 — Produto). */
+export interface ProductDetail extends ProductSummary {
+  sizes: SizeOption[];
+  provenance: ProvenanceInfo;
+  conferencia: string[];
+  galleryLabels: string[];
+  relatedSlugs: string[];
+}

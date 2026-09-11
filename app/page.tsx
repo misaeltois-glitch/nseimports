@@ -9,6 +9,8 @@ import { MOCK_ORDER_STAGES } from "@/content/mock-order-stages";
 import { PACKAGING_LEVELS } from "@/content/mock-packaging";
 import { MOCK_PRODUCTS } from "@/content/mock-products";
 
+export const revalidate = 3600;
+
 const RECENT_PRODUCTS = MOCK_PRODUCTS;
 
 /**

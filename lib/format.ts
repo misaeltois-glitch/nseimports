@@ -46,6 +46,11 @@ export function formatOrderCode(id: string | number): string {
   return `#${String(id).toUpperCase()}`;
 }
 
+/** "em até 10x de R$ 18,90 sem juros" — usado no bloco de preço do Produto. */
+export function formatInstallments(cents: number, times: number = 10): string {
+  return `em até ${times}x de ${formatPriceBRL(cents / times)} sem juros`;
+}
+
 export function formatStockLabel(available: number, total: number): string {
   const plural = total !== 1;
   const unidade = plural ? "unidades" : "unidade";
