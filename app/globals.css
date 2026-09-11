@@ -1,26 +1,122 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  --onix: #0a0a0a;
+  --grafite: #141414;
+  --marfim: #f7f7f5;
+  --ouro: #c9a227;
+  --ouro-claro: #e4c76b;
+  --marinho: #0e1a2b;
+
+  --background: var(--onix);
+  --foreground: var(--marfim);
+
+  --ease-nse: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @theme inline {
+  --color-onix: var(--onix);
+  --color-grafite: var(--grafite);
+  --color-marfim: var(--marfim);
+  --color-ouro: var(--ouro);
+  --color-ouro-claro: var(--ouro-claro);
+  --color-marinho: var(--marinho);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --font-sans: var(--font-archivo);
+  --font-mono: var(--font-jetbrains-mono);
+
+  --radius-control: 2px;
+  --radius-card: 4px;
+
+  --animate-accordion-down: accordion-down 300ms var(--ease-nse);
+  --animate-accordion-up: accordion-up 300ms var(--ease-nse);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes accordion-down {
+  from {
+    height: 0;
   }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+* {
+  border-color: color-mix(in srgb, var(--marfim) 12%, transparent);
+}
+
+html {
+  background: var(--background);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ouro);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Kicker/label: caixa alta, tracking largo, só para labels curtos (regra 04) */
+.kicker {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Grade: largura máxima 1440px, gutter/margem da seção 04 */
+.nse-container {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 32px;
+}
+
+@media (max-width: 640px) {
+  .nse-container {
+    padding-inline: 20px;
+  }
+}
+
+/* Ruído sutil sobre grandes áreas pretas (seção 04) */
+.nse-noise {
+  position: relative;
+}
+
+.nse-noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }

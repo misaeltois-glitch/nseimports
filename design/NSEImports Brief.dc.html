@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/nocturne-253ab150-b254-471e-a0c0-4349d4415e70/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="./doc-page.js"></script>
+<style>
+doc-page:not(:defined){visibility:hidden}
+body{background:#0f1018}
+doc-page{background:transparent}
+a{color:var(--color-accent-300);text-decoration:none}
+a:hover{color:var(--color-accent-200);text-decoration:underline}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace}
+h2,h3,h4{text-wrap:balance}
+</style>
+</helmet>
+
+<doc-page margin="0" style="--gold:#c9a227;--gold-lt:#e4c76b;--navy:#0e1a2b;font-family:var(--font-body);font-size:14.5px;line-height:1.62">
+<div style="background:var(--color-bg);color:var(--color-text);padding:0.7in;print-color-adjust:exact;-webkit-print-color-adjust:exact">
+
+<header style="display:flex;flex-direction:column;gap:18px;padding:0 0 26px;margin:0 0 34px;border-bottom:1px solid var(--color-divider);break-inside:avoid">
+<div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+<span style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold-lt)">Briefing de frontend</span>
+<span class="mono" style="font-size:11px;color:color-mix(in srgb,var(--color-text) 45%,transparent)">v1 · para execução no Claude Code · repo nseimports</span>
+</div>
+<h1 style="font-size:54px;line-height:1.02;letter-spacing:-0.035em;margin:0">NSEImports</h1>
+<p style="font-size:19px;line-height:1.45;max-width:34em;margin:0;color:color-mix(in srgb,var(--color-text) 84%,transparent)">Não vendemos roupa. Vendemos o acesso a uma peça que quase ninguém consegue ter — importada direto da filial de origem, conferida, embalada e entregue como peça de coleção.</p>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+<span class="tag tag-accent">Streetwear importado</span>
+<span class="tag tag-outline">Colecionáveis</span>
+<span class="tag tag-outline">Alto valor</span>
+<span class="tag tag-outline">45 dias úteis, sem rodeio</span>
+</div>
+</header>
+
+<section style="margin:0 0 38px;break-inside:avoid">
+<h6 style="color:var(--gold-lt);margin:0 0 12px">Como usar este documento</h6>
+<p style="max-width:44em;margin:0 0 14px">Salve este briefing como <code style="font-size:12.5px;background:var(--color-neutral-900);padding:1px 5px;border-radius:4px">BRIEF.md</code> na raiz de <code style="font-size:12.5px;background:var(--color-neutral-900);padding:1px 5px;border-radius:4px">misaeltois-glitch/nseimports</code> e mande o Claude Code lê-lo antes de qualquer coisa. Peça a construção na ordem: tokens e componentes base → Home → Produto → Catálogo → Sacola e checkout → Rastreio → Conta → Drops → Lista de espera → Admin. As seções 03, 04, 07 e 08 são inegociáveis: nenhuma decisão visual pode contrariá-las.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:16px">
+<div style="padding:12px 14px;background:var(--color-surface);border-radius:8px"><div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:5px">Idioma</div><div style="font-size:13.5px">Português (BR). Estrutura pronta para EN em rota futura.</div></div>
+<div style="padding:12px 14px;background:var(--color-surface);border-radius:8px"><div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:5px">Stack</div><div style="font-size:13.5px">Next.js 15 (App Router) · TypeScript estrito · Tailwind. Saída estática quando possível.</div></div>
+<div style="padding:12px 14px;background:var(--color-surface);border-radius:8px"><div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:5px">Prioridade</div><div style="font-size:13.5px">Mobile-first. A maior parte do tráfego virá do Instagram.</div></div>
+<div style="padding:12px 14px;background:var(--color-surface);border-radius:8px"><div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:5px">Tom</div><div style="font-size:13.5px">Luxo sóbrio e discreto. Sem hype, sem gritaria, sem emoji.</div></div>
+</div>
+</section>
+
+<section style="margin:0 0 38px">
+<div class="mono" style="font-size:11px;letter-spacing:0.14em;color:var(--gold-lt);margin-bottom:8px">01</div>
+<h2 style="font-size:30px;margin:0 0 14px;letter-spacing:-0.02em">Posicionamento</h2>
+<p style="max-width:44em">O erro que todo site de importados comete é se vender como loja. Loja compete por preço e por prazo — e nós perdemos nos dois. Competimos por <strong style="color:var(--gold-lt);font-weight:500">raridade e procedência</strong>: a peça que o cliente quer não está no shopping, não está no marketplace, e quando aparece aqui é porque alguém foi buscá-la na fonte.</p>
+<p style="max-width:44em">Portanto o frontend não é um catálogo. É um <strong style="font-weight:500">arquivo curado</strong>. Cada produto tem dossiê, não descrição. Cada compra tem processo, não frete. Cada espera tem explicação, não desculpa.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:20px">
+<div style="padding:14px 16px;border-left:2px solid var(--gold);background:color-mix(in srgb,#c9a227 7%,transparent);border-radius:0 8px 8px 0;break-inside:avoid"><div style="font-size:13px;font-weight:500;margin-bottom:5px">O que somos</div><div style="font-size:13px;line-height:1.55;color:color-mix(in srgb,var(--color-text) 80%,transparent)">Curadoria, logística internacional e garantia de estado. Um intermediário em quem o cliente confia mais do que confiaria em si mesmo comprando fora.</div></div>
+<div style="padding:14px 16px;border-left:2px solid color-mix(in srgb,var(--color-text) 25%,transparent);border-radius:0 8px 8px 0;break-inside:avoid"><div style="font-size:13px;font-weight:500;margin-bottom:5px">O que não somos</div><div style="font-size:13px;line-height:1.55;color:color-mix(in srgb,var(--color-text) 80%,transparent)">Fast fashion, dropshipping, "chegou em 3 dias". Nada de contador de escassez falso, nada de banner de cupom piscando, nada de roleta de desconto.</div></div>
+</div>
+</section>
+
+<section style="margin:0 0 38px">
+<div class="mono" style="font-size:11px;letter-spacing:0.14em;color:var(--gold-lt);margin-bottom:8px">02</div>
+<h2 style="font-size:30px;margin:0 0 14px;letter-spacing:-0.02em">Quem compra</h2>
+<p style="max-width:44em;margin-bottom:18px">Três perfis. O site precisa falar com os três sem diluir o tom — o colecionador paga a conta, o entusiasta traz o volume.</p>
+<table class="table" style="width:100%;font-size:13px">
+<thead><tr><th style="width:20%">Perfil</th><th style="width:27%">O que procura</th><th style="width:26%">O que trava a compra</th><th style="width:27%">Como o site resolve</th></tr></thead>
+<tbody>
+<tr><td style="font-weight:500">O Entusiasta<br><span class="mono" style="font-size:11px;color:color-mix(in srgb,var(--color-text) 55%,transparent)">18–26 · R$ 400–1.200</span></td><td>Tênis e peças que os amigos não têm. Descobre pelo Instagram.</td><td>"45 dias? Vou esquecer que comprei."</td><td>Rastreio visual por etapas, aviso no WhatsApp, página de espera bonita de mostrar.</td></tr>
+<tr><td style="font-weight:500">O Colecionador<br><span class="mono" style="font-size:11px;color:color-mix(in srgb,var(--color-text) 55%,transparent)">25–45 · R$ 2.000+</span></td><td>Peça específica, numerada, deadstock.</td><td>"Como sei que é original e que chega intacta?"</td><td>Dossiê de procedência, fotos da unidade real, embalagem personalizada, laudo de conferência.</td></tr>
+<tr><td style="font-weight:500">O Presenteador<br><span class="mono" style="font-size:11px;color:color-mix(in srgb,var(--color-text) 55%,transparent)">qualquer idade</span></td><td>Um presente que impressiona.</td><td>Prazo contra a data do evento.</td><td>Data estimada em destaque e aviso explícito de que não chega antes dela.</td></tr>
+</tbody>
+</table>
+</section>
+
+<section style="margin:0 0 38px;break-before:page">
+<div class="mono" style="font-size:11px;letter-spacing:0.14em;color:var(--gold-lt);margin-bottom:8px">03</div>
+<h2 style="font-size:30px;margin:0 0 14px;letter-spacing:-0.02em">Princípios de design</h2>
+<p style="max-width:44em;margin-bottom:20px">Seis regras. Em qualquer dúvida de layout, decida pela regra — não pelo gosto.</p>
+<ol style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px">
+<li style="display:flex;gap:16px;break-inside:avoid"><span class="mono" style="flex:none;width:26px;font-size:20px;line-height:1.1;color:var(--gold)">1</span><div><div style="font-size:15.5px;font-weight:500;margin-bottom:3px">O produto é o herói; a interface some</div><div style="font-size:13px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 80%,transparent)">Fundo preto profundo, foto ocupando 60–70% da tela, controles discretos nas bordas. Nada de moldura decorativa em volta da peça.</div></div></li>
+<li style="display:flex;gap:16px;break-inside:avoid"><span class="mono" style="flex:none;width:26px;font-size:20px;line-height:1.1;color:var(--gold)">2</span><div><div style="font-size:15.5px;font-weight:500;margin-bottom:3px">Dourado é assinatura, não decoração</div><div style="font-size:13px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 80%,transparent)">Linha de 1px, número de série, selo de autenticidade, anel de foco. Nunca um botão inteiro preenchido de dourado, nunca gradiente dourado, nunca texto longo em dourado.</div></div></li>
+<li style="display:flex;gap:16px;break-inside:avoid"><span class="mono" style="flex:none;width:26px;font-size:20px;line-height:1.1;color:var(--gold)">3</span><div><div style="font-size:15.5px;font-weight:500;margin-bottom:3px">Honestidade é conversão</div><div style="font-size:13px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 80%,transparent)">O prazo aparece antes do preço em toda ficha de produto. Quem desiste por causa do prazo não teria ficado — e não vira reclamação depois.</div></div></li>
+<li style="display:flex;gap:16px;break-inside:avoid"><span class="mono" style="flex:none;width:26px;font-size:20px;line-height:1.1;color:var(--gold)">4</span><div><div style="font-size:15.5px;font-weight:500;margin-bottom:3px">Movimento lento e pesado</div><div style="font-size:13px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 80%,transparent)">Transições de 400–600ms, easing <code style="font-size:12px">cubic-bezier(.16,1,.3,1)</code>, fade com deslocamento curto (12–20px). Nada de bounce, nada de confete. Respeitar <code style="font-size:12px">prefers-reduced-motion</code>.</div></div></li>
+<li style="display:flex;gap:16px;break-inside:avoid"><span class="mono" style="flex:none;width:26px;font-size:20px;line-height:1.1;color:var(--gold)">5</span><div><div style="font-size:15.5px;font-weight:500;margin-bottom:3px">Densidade baixa, respiro alto</div><div style="font-size:13px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 80%,transparent)">No máximo 3 colunas de catálogo no desktop e 2 no mobile. Espaço vazio comunica preço alto melhor do que qualquer selo "premium".</div></div></li>
+<li style="display:flex;gap:16px;break-inside:avoid"><span class="mono" style="flex:none;width:26px;font-size:20px;line-height:1.1;color:var(--gold)">6</span><div><div style="font-size:15.5px;font-weight:500;margin-bottom:3px">Todo número é monoespaçado</div><div style="font-size:13px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 80%,transparent)">Preço, referência, série, código de pedido, contagem de dias. Se é um fato verificável, é mono — esse é o truque que faz o site parecer registro de arquivo e não vitrine.</div></div></li>
+</ol>
+</section>
+
+<section style="margin:0 0 38px">
+<div class="mono" style="font-size:11px;letter-spacing:0.14em;color:var(--gold-lt);margin-bottom:8px">04</div>
+<h2 style="font-size:30px;margin:0 0 14px;letter-spacing:-0.02em">Sistema visual</h2>
+
+<h3 style="font-size:16px;margin:22px 0 10px;letter-spacing:0.02em">Cores</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(124px,1fr));gap:10px;margin-bottom:16px">
+<div style="break-inside:avoid"><div style="height:52px;border-radius:6px;background:#0a0a0a;border:1px solid var(--color-divider)"></div><div style="font-size:12.5px;margin-top:6px;font-weight:500">Ônix</div><div class="mono" style="font-size:11px;color:color-mix(in srgb,var(--color-text) 55%,transparent)">#0A0A0A · fundo</div></div>
+<div style="break-inside:avoid"><div style="height:52px;border-radius:6px;background:#141414;border:1px solid var(--color-divider)"></div><div style="font-size:12.5px;margin-top:6px;font-weight:500">Grafite</div><div class="mono" style="font-size:11px;color:color-mix(in srgb,var(--color-text) 55%,transparent)">#141414 · cards</div></div>
+<div style="break-inside:avoid"><div style="height:52px;border-radius:6px;background:#f7f7f5"></div><div style="font-size:12.5px;margin-top:6px;font-weight:500">Marfim</div><div class="mono" style="font-size:11px;color:color-mix(in srgb,var(--color-text) 55%,transparent)">#F7F7F5 · texto</div></div>
+<div style="break-inside:avoid"><div style="height:52px;border-radius:6px;background:#c9a227"></div><div style="font-size:12.5px;margin-top:6px;font-weight:500">Ouro</div><div class="mono" style="font-size:11px;color:color-mix(in srgb,var(--color-text) 55%,transparent)">#C9A227 · linhas</div></div>
+<div style="break-inside:avoid"><div style="height:52px;border-radius:6px;background:#e4c76b"></div><div style="font-size:12.5px;margin-top:6px;font-weight:500">Ouro claro</div><div class="mono" style="font-size:11px;color:color-mix(in srgb,var(--color-text) 55%,transparent)">#E4C76B · texto ouro</div></div>
+<div style="break-inside:avoid"><div style="height:52px;border-radius:6px;background:#0e1a2b"></div><div style="font-size:12.5px;margin-top:6px;font-weight:500">Marinho</div><div class="mono" style="font-size:11px;color:color-mix(in srgb,var(--color-text) 55%,transparent)">#0E1A2B · terciária</div></div>
+</div>
+<p style="max-width:44em;font-size:13px">Regra do marinho: nunca aparece como cor de marca. Serve para <em>separar sem cortar</em> — fundo de faixas secundárias, hover de linha de tabela, sombra colorida sob o produto, gradiente quase imperceptível no rodapé. Se alguém descrever o site como "preto, branco e dourado", está certo. O marinho é sentido, não visto.</p>
+<p style="max-width:44em;font-size:13px">Contraste: ouro puro não passa em texto corrido sobre preto. Use <span class="mono">#E4C76B</span> para qualquer texto abaixo de 20px e reserve <span class="mono">#C9A227</span> para linhas, bordas, ícones e títulos grandes. Texto de corpo é sempre marfim.</p>
+
+<h3 style="font-size:16px;margin:24px 0 10px;letter-spacing:0.02em">Tipografia</h3>
+<table class="table" style="width:100%;font-size:13px">
+<thead><tr><th style="width:18%">Papel</th><th style="width:32%">Fonte</th><th>Uso</th></tr></thead>
+<tbody>
+<tr><td>Display</td><td><strong style="font-weight:500">Neue Haas Grotesk Display</strong> ou <strong style="font-weight:500">Söhne</strong> · livre: <strong style="font-weight:500">Archivo</strong></td><td>Nome do produto e títulos de seção. Peso 300–400 em corpos grandes (48–96px), tracking −0.03em.</td></tr>
+<tr><td>Corpo</td><td><strong style="font-weight:500">Suisse Int'l</strong> · livre: <strong style="font-weight:500">Archivo</strong> ou <strong style="font-weight:500">Public Sans</strong></td><td>Texto, labels, navegação. 15–17px, line-height 1.6, máximo 70 caracteres por linha.</td></tr>
+<tr><td>Dado</td><td><strong style="font-weight:500">JetBrains Mono</strong> ou <strong style="font-weight:500">IBM Plex Mono</strong></td><td>Preço, referência, série, código de pedido, datas, contagem de dias.</td></tr>
+</tbody>
+</table>
+<p style="max-width:44em;font-size:13px;margin-top:12px">Proibidas: Inter, Roboto, Poppins, Montserrat. Caixa alta com tracking 0.18em só em kickers e labels de até três palavras.</p>
+
+<h3 style="font-size:16px;margin:24px 0 10px;letter-spacing:0.02em">Grade, forma e imagem</h3>
+<ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;max-width:46em">
+<li>Grade de 12 colunas, largura máxima 1440px, gutter 24px, margem lateral 32px (20px no mobile). Escala de espaçamento em múltiplos de 4.</li>
+<li>Raio de canto: 2px em botões e inputs, 4px em cards, 0px em imagens de produto. Quase reto — arredondado demais parece loja de aplicativo.</li>
+<li>Fotos de produto sempre sobre preto ou carvão, respiro generoso, 4:5 na grade e 1:1 no zoom.</li>
+<li>Mínimo por produto: 1 foto de estúdio, 1 foto da unidade real recebida, 1 detalhe de etiqueta ou costura, 1 foto da caixa.</li>
+<li>Ruído sutil (2–3% de opacidade) sobre grandes áreas pretas — evita banding e dá textura de impresso.</li>
+<li>Enquanto não houver fotos reais, use placeholders em cinza-carvão com a referência da peça em mono no centro. Placeholder honesto é melhor que imagem de banco.</li>
+</ul>
+</section>
+
+<section style="margin:0 0 38px;break-before:page">
+<div class="mono" style="font-size:11px;letter-spacing:0.14em;color:var(--gold-lt);margin-bottom:8px">05</div>
+<h2 style="font-size:30px;margin:0 0 14px;letter-spacing:-0.02em">Rotas</h2>
+<table class="table" style="width:100%;font-size:13px">
+<thead><tr><th style="width:27%">Rota</th><th style="width:23%">Tela</th><th>Objetivo único</th></tr></thead>
+<tbody>
+<tr><td class="mono">/</td><td>Home</td><td>Convencer em 8 segundos de que isto não é uma loja comum.</td></tr>
+<tr><td class="mono">/arquivo</td><td>Catálogo</td><td>Navegar por categoria, raridade e preço sem sensação de marketplace.</td></tr>
+<tr><td class="mono">/arquivo/[slug]</td><td>Produto (dossiê)</td><td>Transformar desejo em pedido com o prazo aceito conscientemente.</td></tr>
+<tr><td class="mono">/drops</td><td>Drops e diário</td><td>Mostrar o que está chegando e contar a história das peças.</td></tr>
+<tr><td class="mono">/drops/[slug]</td><td>Post do drop</td><td>Conteúdo longo + peças relacionadas + entrada na lista de espera.</td></tr>
+<tr><td class="mono">/lista</td><td>Lista de espera</td><td>Capturar interesse em peça ainda não disponível.</td></tr>
+<tr><td class="mono">/processo</td><td>Como funciona</td><td>Justificar os 45 dias úteis etapa por etapa.</td></tr>
+<tr><td class="mono">/embalagem</td><td>Níveis de embalagem</td><td>Vender o upgrade (Avançada e Personalizada).</td></tr>
+<tr><td class="mono">/sacola</td><td>Sacola</td><td>Revisar itens e escolher embalagem por item.</td></tr>
+<tr><td class="mono">/checkout</td><td>Checkout em 3 passos</td><td>Fechar sem fricção, reconfirmando a data estimada.</td></tr>
+<tr><td class="mono">/pedido/[id]</td><td>Confirmação</td><td>Dar segurança imediata e abrir o canal de acompanhamento.</td></tr>
+<tr><td class="mono">/rastrear</td><td>Rastreio público</td><td>Consultar por código, sem login.</td></tr>
+<tr><td class="mono">/conta</td><td>Conta</td><td>Pedidos, endereços, avisos, lista de desejos.</td></tr>
+<tr><td class="mono">/sobre</td><td>Sobre e procedência</td><td>Construir confiança: quem somos, de onde vem, o que garantimos.</td></tr>
+<tr><td class="mono">/duvidas</td><td>Dúvidas</td><td>Matar objeção de prazo, imposto, autenticidade e devolução.</td></tr>
+<tr><td class="mono">/admin</td><td>Admin</td><td>Cadastrar peça, mover etapa do pedido, responder lista de espera.</td></tr>
+</tbody>
+</table>
+</section>
+
+<section style="margin:0 0 38px">
+<div class="mono" style="font-size:11px;letter-spacing:0.14em;color:var(--gold-lt);margin-bottom:8px">06</div>
+<h2 style="font-size:30px;margin:0 0 18px;letter-spacing:-0.02em">Tela a tela</h2>
+
+<article style="margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid var(--color-divider)">
+<h3 style="font-size:18px;margin:0 0 4px">Home</h3>
+<p class="mono" style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-lt);margin:0 0 12px">Sete blocos, nesta ordem</p>
+<ol style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;max-width:46em">
+<li><strong style="font-weight:500">Abertura em tela cheia.</strong> Uma peça só, foto escura, nome em display grande à esquerda. Sobreposto em mono: origem ("Tóquio → São Paulo"), lote e data estimada de chegada. Sem carrossel.</li>
+<li><strong style="font-weight:500">Faixa de credibilidade.</strong> Quatro números em mono sobre marinho: peças entregues, países de origem, taxa de conferência aprovada, avaliação média. Linha dourada de 1px acima e abaixo.</li>
+<li><strong style="font-weight:500">Arquivo recente.</strong> Seis peças em grade 3×2; hover revela origem e estoque real ("1 de 2 unidades").</li>
+<li><strong style="font-weight:500">O prazo, explicado.</strong> Linha do tempo horizontal de cinco etapas (seção 07). Este bloco está na Home de propósito: o prazo não é letra miúda.</li>
+<li><strong style="font-weight:500">Embalagem.</strong> Três cards lado a lado com foto real de cada nível.</li>
+<li><strong style="font-weight:500">Chegou assim.</strong> Galeria de fotos de clientes recebendo a peça — prova social sem depoimento genérico.</li>
+<li><strong style="font-weight:500">Avisos de drop.</strong> Um campo de e-mail ou WhatsApp e um botão contornado. Sem pop-up, nunca.</li>
+</ol>
+</article>
+
+<article style="margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid var(--color-divider)">
+<h3 style="font-size:18px;margin:0 0 10px">Arquivo (catálogo)</h3>
+<ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;max-width:46em">
+<li>Filtros em barra lateral fixa no desktop, gaveta inferior no mobile: categoria (tênis, moletom, boné, jaqueta, acessório), origem, faixa de preço, <strong style="font-weight:500">raridade</strong> (Comum · Limitado · Raro · Peça única) e disponibilidade.</li>
+<li>Ordenação: recentes, preço, e "menor prazo" — peças já em trânsito chegam antes.</li>
+<li>Card: foto 4:5, nome, preço em mono, tag de raridade e uma linha discreta com a data estimada. Hover troca para a segunda foto em fade de 400ms.</li>
+<li>Filtros ativos viram chips removíveis acima da grade; o estado dos filtros vai para a URL (compartilhável e indexável).</li>
+<li>Esgotados continuam visíveis a 40% de opacidade com "avisar quando voltar" — o arquivo também é vitrine de reputação.</li>
+<li>Paginação por "carregar mais", nunca scroll infinito.</li>
+<li>Estado vazio: "Nenhuma peça com esses filtros. Entre na lista e avisamos quando entrar uma." + link para /lista.</li>
+</ul>
+</article>
+
+<article style="margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid var(--color-divider)">
+<h3 style="font-size:18px;margin:0 0 10px">Produto — o dossiê</h3>
+<p style="font-size:13px;max-width:46em;margin-bottom:10px">A tela mais importante do site. Duas colunas no desktop: galeria sticky à esquerda (60%), painel de decisão à direita (40%) que rola.</p>
+<ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;max-width:46em">
+<li><strong style="font-weight:500">Cabeçalho:</strong> marca, nome, referência em mono, tag de raridade.</li>
+<li><strong style="font-weight:500">Bloco de prazo — antes do preço.</strong> "Chega entre 12 e 26 de novembro" em destaque, "45 dias úteis a partir da confirmação" abaixo, link para /processo.</li>
+<li><strong style="font-weight:500">Preço</strong> em mono grande, com parcelamento e aviso de que impostos e frete internacional já estão inclusos.</li>
+<li><strong style="font-weight:500">Tamanhos</strong> em botões quadrados; indisponíveis riscados, não escondidos. Link para tabela de medidas em modal.</li>
+<li><strong style="font-weight:500">Embalagem escolhida aqui</strong>, não só no checkout — é onde o colecionador decide.</li>
+<li><strong style="font-weight:500">Procedência:</strong> filial/loja de origem, país, data de aquisição, condição (novo lacrado / deadstock / usado grau A). Ficha em mono, cada campo separado por régua dourada de 1px.</li>
+<li><strong style="font-weight:500">Conferência:</strong> checklist do que verificamos antes de despachar — etiqueta, numeração, costura, caixa original, acessórios.</li>
+<li><strong style="font-weight:500">Galeria da unidade real:</strong> as fotos da peça que este cliente vai receber, não do catálogo da marca.</li>
+<li><strong style="font-weight:500">Relacionados:</strong> no máximo três, mesma origem ou mesmo lote.</li>
+<li>Mobile: barra inferior fixa com preço, data estimada e botão. A data nunca sai da tela.</li>
+</ul>
+</article>
+
+<article style="margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid var(--color-divider)">
+<h3 style="font-size:18px;margin:0 0 10px">Sacola e checkout</h3>
+<ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;max-width:46em">
+<li>Sacola em painel lateral deslizante; cada linha traz item, tamanho, embalagem e data estimada própria.</li>
+<li>Com prazos diferentes no carrinho, oferecer explicitamente <em>enviar junto quando tudo chegar</em> ou <em>enviar em partes</em>, com o custo extra visível.</li>
+<li>Checkout em 3 passos com barra de progresso dourada fina: <strong style="font-weight:500">Identificação → Entrega e embalagem → Pagamento</strong>. Um passo por tela no mobile.</li>
+<li>Convidado permitido; conta criada depois, na confirmação, com um clique.</li>
+<li>CEP preenche endereço automaticamente; validação inline, mensagem de erro abaixo do campo em texto, nunca só borda vermelha.</li>
+<li>Pagamento: Pix com desconto exibido, cartão parcelado, boleto. Reserva da peça por 30 minutos com contador em mono — o único contador honesto do site.</li>
+<li>Antes do botão final, checkbox obrigatório: "Entendi que esta peça é importada e chega em até 45 dias úteis." Reduz chargeback e reclamação.</li>
+<li>Resumo do pedido sempre visível (coluna à direita no desktop, acordeão fixo no topo no mobile).</li>
+<li>Confirmação: número do pedido em mono grande, data estimada, botão para acompanhar no WhatsApp e link direto para o rastreio.</li>
+</ul>
+</article>
+
+<article style="margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid var(--color-divider)">
+<h3 style="font-size:18px;margin:0 0 10px">Rastreio</h3>
+<p style="font-size:13px;max-width:46em">Público, por código do pedido, sem login. Linha do tempo vertical de cinco etapas: etapa atual em dourado, futuras em cinza, cada uma com data real ou estimada. Abaixo, registro em mono com carimbos ("14/10 · conferência aprovada em Miami"). Barra de progresso com dias decorridos e restantes. Esta tela será aberta dez vezes durante a espera — precisa ser bonita o bastante para o cliente mandar print no grupo.</p>
+</article>
+
+<article style="margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid var(--color-divider)">
+<h3 style="font-size:18px;margin:0 0 10px">Conta</h3>
+<ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;max-width:46em">
+<li>Entrada por e-mail com link mágico ou senha; nada de login social obrigatório.</li>
+<li><strong style="font-weight:500">Pedidos:</strong> lista com miniatura, status por etapa e data estimada; detalhe abre o rastreio embutido, a nota e o comprovante.</li>
+<li><strong style="font-weight:500">Arquivo pessoal:</strong> peças já recebidas apresentadas como coleção, com data de chegada e origem — dá orgulho e estimula recompra.</li>
+<li><strong style="font-weight:500">Desejos e avisos:</strong> peças salvas e alertas de volta ao estoque.</li>
+<li><strong style="font-weight:500">Endereços e dados</strong> em formulário simples, um por card.</li>
+</ul>
+</article>
+
+<article style="margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid var(--color-divider)">
+<h3 style="font-size:18px;margin:0 0 10px">Drops e diário</h3>
+<ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;max-width:46em">
+<li>Duas naturezas no mesmo índice, diferenciadas por tag: <strong style="font-weight:500">Drop</strong> (lote que chega em data marcada) e <strong style="font-weight:500">Diário</strong> (bastidor: como uma peça foi encontrada, o que a torna rara).</li>
+<li>Card de drop mostra contagem regressiva até a abertura, em mono, e as peças do lote.</li>
+<li>Post em coluna única de 68 caracteres, imagens em largura total, citação com barra dourada à esquerda.</li>
+<li>Fim do post: peças relacionadas + entrada na lista de espera. Sempre.</li>
+</ul>
+</article>
+
+<article style="margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid var(--color-divider)">
+<h3 style="font-size:18px;margin:0 0 10px">Lista de espera (pré-venda)</h3>
+<ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;max-width:46em">
+<li>Formulário curto: peça desejada (busca ou texto livre), tamanho, faixa de preço aceita, e-mail e WhatsApp.</li>
+<li>Explicar em uma frase o que acontece depois: "Procuramos na origem e respondemos em até 5 dias úteis com preço fechado e data."</li>
+<li>Confirmação com posição na fila em mono, quando houver fila.</li>
+<li>Também disponível como bloco compacto em produto esgotado e no fim de cada post de drop.</li>
+</ul>
+</article>
+
+<article style="margin:0 0 4px">
+<h3 style="font-size:18px;margin:0 0 10px">Sobre, dúvidas e admin</h3>
+<ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;max-width:46em">
+<li><strong style="font-weight:500">/sobre:</strong> como conseguimos as peças, quem confere, o que garantimos, o que fazemos se algo chegar errado. Texto longo é bem-vindo — confiança se constrói com detalhe.</li>
+<li><strong style="font-weight:500">/duvidas:</strong> acordeão agrupado em Prazo, Autenticidade, Pagamento e impostos, Trocas e devoluções, Embalagem. A pergunta do prazo abre por padrão.</li>
+<li><strong style="font-weight:500">/admin:</strong> área protegida, deliberadamente simples e densa (é ferramenta, não vitrine). Três telas: <em>Peças</em> (tabela com busca, criar e editar, upload de fotos), <em>Pedidos</em> (tabela com filtro por etapa e botão para avançar etapa, o que dispara a notificação), <em>Lista de espera</em> (fila com marcar como respondida). Mesmos tokens, densidade alta, sem animação.</li>
+</ul>
+</article>
+</section>
+
+<section style="margin:0 0 38px;break-before:page">
+<div class="mono" style="font-size:11px;letter-spacing:0.14em;color:var(--gold-lt);margin-bottom:8px">07</div>
+<h2 style="font-size:30px;margin:0 0 14px;letter-spacing:-0.02em">Os 45 dias úteis</h2>
+<p style="max-width:44em">O maior obstáculo comercial do negócio e, bem tratado, o maior diferencial. A regra: <strong style="color:var(--gold-lt);font-weight:500">o prazo nunca é escondido e nunca é pedido de desculpas — é o preço da procedência.</strong> Três mecanismos, todos obrigatórios.</p>
+
+<div style="display:grid;gap:12px;margin:20px 0 24px">
+<div style="padding:14px 16px;background:var(--color-surface);border-radius:8px;break-inside:avoid"><div style="font-size:15px;font-weight:500;margin-bottom:4px">1 · O selo de data</div><div style="font-size:13px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 82%,transparent)">Componente que converte 45 dias úteis em <em>datas reais</em> ("chega entre 12 e 26 de novembro"), calculadas a partir de hoje, descontando fins de semana e feriados nacionais. Aparece no card do catálogo, no produto, na sacola, no checkout e no e-mail. Nunca escrever "45 dias úteis" sem a data ao lado.</div></div>
+<div style="padding:14px 16px;background:var(--color-surface);border-radius:8px;break-inside:avoid"><div style="font-size:15px;font-weight:500;margin-bottom:4px">2 · A linha do tempo explicada</div><div style="font-size:13px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 82%,transparent)">Cinco etapas com duração declarada (quadro abaixo). Aparece na Home, em /processo e no rastreio. Cada etapa tem uma frase de "o que está acontecendo agora".</div></div>
+<div style="padding:14px 16px;background:var(--color-surface);border-radius:8px;break-inside:avoid"><div style="font-size:15px;font-weight:500;margin-bottom:4px">3 · O acompanhamento por pedido</div><div style="font-size:13px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 82%,transparent)">Progresso com dias decorridos e restantes em mono, atualizado a cada etapa, com e-mail e WhatsApp em toda mudança de estado. Se o prazo escorregar, o site avisa <em>antes</em> de o cliente perguntar — com a nova data e o motivo.</div></div>
+</div>
+
+<table class="table" style="width:100%;font-size:13px">
+<thead><tr><th style="width:6%">#</th><th style="width:25%">Etapa</th><th style="width:17%">Duração</th><th>O que acontece</th></tr></thead>
+<tbody>
+<tr><td class="mono" style="color:var(--gold-lt)">01</td><td>Aquisição na origem</td><td class="mono">5–10 dias úteis</td><td>Compra confirmada na filial ou no fornecedor autorizado do país de origem.</td></tr>
+<tr><td class="mono" style="color:var(--gold-lt)">02</td><td>Conferência internacional</td><td class="mono">3–5 dias úteis</td><td>Autenticidade, numeração, estado e acessórios verificados e fotografados.</td></tr>
+<tr><td class="mono" style="color:var(--gold-lt)">03</td><td>Trânsito internacional</td><td class="mono">10–18 dias úteis</td><td>Consolidação e voo até o Brasil.</td></tr>
+<tr><td class="mono" style="color:var(--gold-lt)">04</td><td>Liberação alfandegária</td><td class="mono">5–15 dias úteis</td><td>A etapa que não controlamos — e por isso a que mais precisa ser explicada.</td></tr>
+<tr><td class="mono" style="color:var(--gold-lt)">05</td><td>Embalagem e entrega</td><td class="mono">2–5 dias úteis</td><td>Embalagem no nível escolhido, foto final enviada ao cliente, despacho nacional.</td></tr>
+</tbody>
+</table>
+<p style="font-size:12.5px;margin-top:10px;color:color-mix(in srgb,var(--color-text) 60%,transparent);max-width:44em">Ajuste as durações aos números reais da operação antes de publicar. A soma exibida precisa ser coerente com os 45 dias úteis prometidos, com folga.</p>
+</section>
+
+<section style="margin:0 0 38px">
+<div class="mono" style="font-size:11px;letter-spacing:0.14em;color:var(--gold-lt);margin-bottom:8px">08</div>
+<h2 style="font-size:30px;margin:0 0 14px;letter-spacing:-0.02em">Embalagem</h2>
+<p style="max-width:44em;margin-bottom:18px">Três níveis, apresentados como upgrade natural e não como taxa. Cada nível precisa de foto real e de uma frase que diga para quem ele é.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+<div style="padding:16px;border:1px solid var(--color-divider);border-radius:8px;break-inside:avoid"><div class="mono" style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:color-mix(in srgb,var(--color-text) 55%,transparent);margin-bottom:8px">Nível 01</div><div style="font-size:18px;margin-bottom:8px">Padrão</div><div style="font-size:12.5px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 80%,transparent)">Caixa original protegida, plástico bolha, lacre NSE. Incluso em todo pedido. Para quem vai usar a peça.</div></div>
+<div style="padding:16px;border:1px solid var(--gold);border-radius:8px;background:color-mix(in srgb,#c9a227 8%,transparent);break-inside:avoid"><div class="mono" style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:8px">Nível 02 · mais escolhido</div><div style="font-size:18px;margin-bottom:8px">Avançada</div><div style="font-size:12.5px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 85%,transparent)">Caixa externa rígida, espuma sob medida, papel seda, cartão de procedência assinado. Para quem quer a caixa original intacta.</div></div>
+<div style="padding:16px;border:1px solid var(--color-divider);border-radius:8px;break-inside:avoid"><div class="mono" style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:color-mix(in srgb,var(--color-text) 55%,transparent);margin-bottom:8px">Nível 03</div><div style="font-size:18px;margin-bottom:8px">Personalizada</div><div style="font-size:12.5px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 80%,transparent)">Caixa de colecionador, sílica, proteção UV, gravação do nome, certificado numerado. Para quem vai guardar por dez anos. Preço sob consulta dentro do fluxo.</div></div>
+</div>
+<p style="max-width:44em;font-size:13px;margin-top:16px">No frontend o seletor é um grupo de rádio com foto, nome, uma linha de descrição e preço. Trocar o nível anima a foto em fade. O nível Personalizada abre campos extras (nome a gravar, observações) e um aviso de que pode somar 3 dias úteis ao prazo.</p>
+</section>
+
+<section style="margin:0 0 38px;break-before:page">
+<div class="mono" style="font-size:11px;letter-spacing:0.14em;color:var(--gold-lt);margin-bottom:8px">09</div>
+<h2 style="font-size:30px;margin:0 0 14px;letter-spacing:-0.02em">Componentes a construir</h2>
+<p style="max-width:44em;margin-bottom:16px">Nesta ordem. Cada um com todas as variantes e estados: padrão, hover, ativo, foco visível, desabilitado, carregando, erro.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));gap:10px;font-size:12.5px">
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">Button</strong> — contornado, sólido marfim, fantasma, ícone. Borda dourada só no primário.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">RarityTag</strong> — Comum, Limitado, Raro, Peça única. Só a última usa dourado.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">ArrivalEstimate</strong> — calcula e formata a janela de datas. Variantes inline, destaque e compacta.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">ProductCard</strong> — foto 4:5, troca no hover, tag, preço mono, data estimada.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">Gallery</strong> — miniaturas verticais, zoom no clique, swipe no mobile.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">SpecSheet</strong> — ficha de procedência em mono, linhas separadas por régua dourada.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">Timeline</strong> — horizontal (Home) e vertical (rastreio), com estado por etapa.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">PackagingPicker</strong> — rádio com foto, descrição e preço.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">FilterPanel</strong> — sidebar no desktop, gaveta no mobile, chips de filtro ativo.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">CartDrawer</strong> — painel lateral com resumo e prazo por item.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">CheckoutStepper</strong> — 3 passos, validação inline, progresso dourado.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">StatBand</strong> — faixa de números sobre marinho.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">WaitlistForm</strong> — completo e compacto.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">Accordion</strong> — dúvidas, abertura com altura animada.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">Header</strong> — transparente no topo, sólido ao rolar, contador de sacola.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">Footer</strong> — gradiente sutil para marinho, mapa do site, selos de pagamento.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">DataTable</strong> — base do admin: busca, ordenação, ações por linha.</div>
+<div style="padding:11px 13px;background:var(--color-surface);border-radius:6px;break-inside:avoid"><strong style="font-weight:500">Skeleton / EmptyState / Toast</strong> — nunca deixar tela em branco nem ação sem retorno.</div>
+</div>
+</section>
+
+<section style="margin:0 0 38px">
+<div class="mono" style="font-size:11px;letter-spacing:0.14em;color:var(--gold-lt);margin-bottom:8px">10</div>
+<h2 style="font-size:30px;margin:0 0 14px;letter-spacing:-0.02em">Técnico</h2>
+<ul style="margin:0 0 18px;padding-left:18px;font-size:13px;line-height:1.7;max-width:46em">
+<li><strong style="font-weight:500">Next.js 15 App Router, TypeScript estrito, Tailwind.</strong> Tokens de cor, tipografia e espaçamento em <code style="font-size:12px">tailwind.config.ts</code> e variáveis CSS — nenhum hex solto em componente.</li>
+<li>Páginas de conteúdo (Home, arquivo, produto, drops, sobre, dúvidas) geradas estaticamente com revalidação; só sacola, checkout, conta e admin são dinâmicos. O site precisa abrir rápido em 4G ruim.</li>
+<li>Dados de produto em <code style="font-size:12px">/content/products/*.json</code> validados com Zod, para trocar por um CMS depois sem reescrever tela.</li>
+<li>Sacola em Zustand com persistência em localStorage; nunca perder o carrinho ao recarregar.</li>
+<li>Imagens por <code style="font-size:12px">next/image</code>, AVIF/WebP, placeholder blur, <code style="font-size:12px">sizes</code> correto, lazy fora da primeira dobra.</li>
+<li>Animação com Framer Motion, apenas <code style="font-size:12px">transform</code> e <code style="font-size:12px">opacity</code>.</li>
+<li>Estrutura: <code style="font-size:12px">app/</code> (rotas) · <code style="font-size:12px">components/ui/</code> (primitivos) · <code style="font-size:12px">components/commerce/</code> · <code style="font-size:12px">lib/</code> (cálculo de prazo, formatação, validações) · <code style="font-size:12px">content/</code> · <code style="font-size:12px">types/</code>.</li>
+<li>Sem dependência pesada de UI kit. Radix UI apenas para modal, acordeão e popover acessíveis.</li>
+<li>Testes: unitário no cálculo de dias úteis (é a regra de negócio mais sensível do site) e um teste de fluxo do checkout.</li>
+</ul>
+
+<h3 style="font-size:16px;margin:0 0 10px;letter-spacing:0.02em">Acessibilidade, performance e SEO</h3>
+<ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;max-width:46em">
+<li>Contraste mínimo 4.5:1 em texto de corpo. Alvo de toque mínimo 44px. Navegação completa por teclado, com anel de foco dourado de 2px e deslocamento de 2px.</li>
+<li>HTML semântico, um <code style="font-size:12px">h1</code> por página, <code style="font-size:12px">alt</code> descritivo em toda foto de produto.</li>
+<li>Metas: LCP abaixo de 2,5s em 4G, CLS abaixo de 0,1, JS inicial abaixo de 150 kB gzip.</li>
+<li>Dados estruturados <code style="font-size:12px">Product</code> e <code style="font-size:12px">Offer</code> com prazo de entrega, <code style="font-size:12px">BreadcrumbList</code> e <code style="font-size:12px">FAQPage</code>. Open Graph por produto com a foto principal.</li>
+<li><code style="font-size:12px">sitemap.xml</code> e <code style="font-size:12px">robots.txt</code> gerados; URLs em português, slug com marca e modelo.</li>
+</ul>
+</section>
+
+<section style="margin:0 0 38px;break-before:page">
+<div class="mono" style="font-size:11px;letter-spacing:0.14em;color:var(--gold-lt);margin-bottom:8px">11</div>
+<h2 style="font-size:30px;margin:0 0 14px;letter-spacing:-0.02em">Voz e microtexto</h2>
+<p style="max-width:44em;margin-bottom:16px">Frases curtas, afirmativas, sem adjetivo de propaganda. Nunca "incrível", "exclusivíssimo", "imperdível". A raridade se prova com fato — origem, quantidade, data — não com adjetivo.</p>
+<table class="table" style="width:100%;font-size:13px">
+<thead><tr><th style="width:26%">Onde</th><th style="width:37%">Escreva assim</th><th>Nunca assim</th></tr></thead>
+<tbody>
+<tr><td>Botão de compra</td><td>Reservar peça</td><td>COMPRAR AGORA!!</td></tr>
+<tr><td>Prazo</td><td>Chega entre 12 e 26 de novembro</td><td>Entrega em até 45 dias</td></tr>
+<tr><td>Estoque</td><td>1 de 2 unidades disponíveis</td><td>Últimas unidades! Corre!</td></tr>
+<tr><td>Esgotado</td><td>Fora do arquivo. Avise-me quando entrar.</td><td>Produto indisponível</td></tr>
+<tr><td>Erro de campo</td><td>Informe um CEP com 8 dígitos</td><td>Campo inválido</td></tr>
+<tr><td>Espera longa</td><td>Sua peça está na alfândega. É a etapa mais lenta e não depende de nós — avisamos assim que liberar.</td><td>Aguarde, seu pedido está em processamento</td></tr>
+<tr><td>Lista de espera</td><td>Procuramos na origem e respondemos em até 5 dias úteis com preço fechado e data.</td><td>Deixe seu e-mail para novidades</td></tr>
+</tbody>
+</table>
+</section>
+
+<section style="margin:0 0 38px">
+<div class="mono" style="font-size:11px;letter-spacing:0.14em;color:var(--gold-lt);margin-bottom:8px">12</div>
+<h2 style="font-size:30px;margin:0 0 14px;letter-spacing:-0.02em">Critérios de aceite</h2>
+<p style="max-width:44em;margin-bottom:16px">O frontend só está pronto quando todos estes forem verdade.</p>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
+<div style="display:flex;gap:11px;align-items:flex-start;break-inside:avoid"><span style="flex:none;width:14px;height:14px;margin-top:3px;border:1px solid var(--gold);border-radius:2px"></span><span>A data estimada de chegada aparece em catálogo, produto, sacola, checkout e confirmação — sempre como data real, nunca só como contagem de dias.</span></div>
+<div style="display:flex;gap:11px;align-items:flex-start;break-inside:avoid"><span style="flex:none;width:14px;height:14px;margin-top:3px;border:1px solid var(--gold);border-radius:2px"></span><span>Nenhum hex escrito dentro de componente; tudo vem dos tokens.</span></div>
+<div style="display:flex;gap:11px;align-items:flex-start;break-inside:avoid"><span style="flex:none;width:14px;height:14px;margin-top:3px;border:1px solid var(--gold);border-radius:2px"></span><span>Todo número visível na interface está em fonte monoespaçada.</span></div>
+<div style="display:flex;gap:11px;align-items:flex-start;break-inside:avoid"><span style="flex:none;width:14px;height:14px;margin-top:3px;border:1px solid var(--gold);border-radius:2px"></span><span>Nenhuma área maior que um botão está preenchida de dourado.</span></div>
+<div style="display:flex;gap:11px;align-items:flex-start;break-inside:avoid"><span style="flex:none;width:14px;height:14px;margin-top:3px;border:1px solid var(--gold);border-radius:2px"></span><span>O fluxo completo — descobrir peça, escolher embalagem, fechar pedido, rastrear — funciona inteiro no celular, com uma mão.</span></div>
+<div style="display:flex;gap:11px;align-items:flex-start;break-inside:avoid"><span style="flex:none;width:14px;height:14px;margin-top:3px;border:1px solid var(--gold);border-radius:2px"></span><span>Toda tela tem estado de carregamento e estado vazio desenhados.</span></div>
+<div style="display:flex;gap:11px;align-items:flex-start;break-inside:avoid"><span style="flex:none;width:14px;height:14px;margin-top:3px;border:1px solid var(--gold);border-radius:2px"></span><span>Navegação por teclado percorre o site inteiro com foco sempre visível.</span></div>
+<div style="display:flex;gap:11px;align-items:flex-start;break-inside:avoid"><span style="flex:none;width:14px;height:14px;margin-top:3px;border:1px solid var(--gold);border-radius:2px"></span><span>Com <code style="font-size:12px">prefers-reduced-motion</code> ativo, nada se move.</span></div>
+<div style="display:flex;gap:11px;align-items:flex-start;break-inside:avoid"><span style="flex:none;width:14px;height:14px;margin-top:3px;border:1px solid var(--gold);border-radius:2px"></span><span>Lighthouse acima de 90 em performance, acessibilidade e SEO no mobile.</span></div>
+</div>
+</section>
+
+<section style="margin:0 0 10px">
+<div class="mono" style="font-size:11px;letter-spacing:0.14em;color:var(--gold-lt);margin-bottom:8px">13</div>
+<h2 style="font-size:30px;margin:0 0 14px;letter-spacing:-0.02em">Prompt inicial</h2>
+<p style="max-width:44em;margin-bottom:14px">Cole isto na primeira mensagem ao Claude Code, com o briefing já commitado no repositório.</p>
+<div style="padding:18px 20px;background:#0e1a2b;border-left:2px solid var(--gold);border-radius:0 8px 8px 0;font-size:13px;line-height:1.65;break-inside:avoid">
+<p style="margin:0 0 10px">Leia o arquivo <span class="mono">BRIEF.md</span> na raiz deste repositório por inteiro antes de escrever qualquer código. Ele define o posicionamento, o sistema visual e o comportamento de cada tela do frontend da NSEImports.</p>
+<p style="margin:0 0 10px">Comece pela fundação: inicialize o projeto em Next.js 15 com App Router, TypeScript estrito e Tailwind, e implemente os tokens da seção 04 (cores, tipografia, espaçamento, raio) em <span class="mono">tailwind.config.ts</span> e em variáveis CSS. Depois construa os componentes da seção 09 em <span class="mono">components/ui/</span>, com todos os estados, e monte uma rota <span class="mono">/estilo</span> que exiba todos eles juntos para revisão.</p>
+<p style="margin:0 0 10px">Só então avance para as telas, uma por vez, na ordem da seção 05, parando a cada tela para eu revisar. Implemente o utilitário de cálculo de dias úteis com feriados nacionais brasileiros antes da tela de produto — ele é usado em todo o site — e escreva teste unitário para ele.</p>
+<p style="margin:0">Regras que não podem ser violadas: nenhum hex fora dos tokens, todo número em fonte monoespaçada, dourado só em linhas, bordas, ícones e títulos grandes, e a data estimada de chegada visível em toda tela de compra. Quando algo do briefing estiver ambíguo, pergunte antes de decidir.</p>
+</div>
+<p style="font-size:12.5px;margin-top:16px;color:color-mix(in srgb,var(--color-text) 60%,transparent);max-width:44em">Ainda em aberto, e que vale definir antes de começar: o provedor de pagamento, a quantidade de peças no lançamento, e se o admin será a versão simples descrita aqui ou uma planilha ligada por API.</p>
+</section>
+</div>
+</doc-page>
+</x-dc>
+</body>
+</html>
