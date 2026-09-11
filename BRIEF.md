@@ -8,19 +8,20 @@ Não vendemos roupa. Vendemos o acesso a uma peça que quase ninguém consegue t
 
 ## Status do projeto (ler primeiro)
 
-*Atualizado em 2026-09-11, fim da sessão que implementou as fases 1–5.*
+*Atualizado em 2026-09-11, fim da sessão que implementou as fases 1–6.*
 
-**Feito e em produção** (commits `2d91d59` → `0b5cbdd`, deploy automático via push para `main` no Vercel):
+**Feito e em produção** (commits `2d91d59` → `1df9336`, deploy automático via push para `main` no Vercel):
 
 1. **Fundação** — tokens (cores/tipografia/raio) em `app/globals.css` via Tailwind v4 `@theme inline`; fontes Archivo (display/corpo) + JetBrains Mono (dados) — as fontes pagas do briefing (Neue Haas Grotesk, Söhne, Suisse Int'l) não estão disponíveis, uso as alternativas livres que o próprio briefing autoriza. `lib/business-days.ts` (cálculo de dias úteis com feriados fixos, testado em `lib/business-days.test.ts`). Os 18 componentes de `components/ui/`, revisáveis em `/estilo`.
 2. **Home** (`app/page.tsx`) — sete blocos da seção 06.
 3. **Produto** (`app/arquivo/[slug]/page.tsx`) — dossiê completo, galeria + painel de decisão (`components/commerce/ProductPurchasePanel.tsx`), procedência, conferência, relacionados.
 4. **Catálogo** (`app/arquivo/page.tsx` + `components/commerce/CatalogBrowser.tsx`) — filtros com estado na URL, ordenação, "carregar mais", estado vazio e esgotado.
 5. **Sacola e checkout** (`/sacola`, `/checkout`, `/pedido/[id]`) — carrinho em Zustand persistido em localStorage (`lib/cart-store.ts`), embalagem editável por item, escolha "enviar junto/em partes" quando os prazos divergem, checkout em 3 passos com CEP autopreenchido via ViaCEP (`lib/cep.ts`), reserva de 30 min com contador, e confirmação com link de WhatsApp/rastreio. Pedidos ficam em localStorage (`lib/orders.ts`) — ainda não há backend real.
+6. **Rastreio** (`/rastrear` + `components/commerce/TrackingLookup.tsx`) — consulta pública por código, sem login. A etapa atual é derivada dos dias úteis decorridos desde a criação do pedido (`lib/tracking.ts`), já que ainda não há backend rastreando etapa por etapa de verdade.
 
 **Dados:** tudo em mocks (`content/mock-products.ts`, `mock-product-details.ts`, `mock-packaging.ts`, `mock-order-stages.ts`) — 8 produtos cobrindo as 5 categorias. Ainda não existe `/content/products/*.json` validado com Zod (isso é do "Técnico", seção 10, não amarrado a uma fase específica — decidir quando migrar).
 
-**Próximo passo:** Fase 6 — **Rastreio** (`/rastrear`, seção 06). É pública, por código de pedido, sem login — vai ler de `lib/orders.ts` (mesmo mecanismo de localStorage da confirmação). O link "Ir para o rastreio" na confirmação já aponta para `/rastrear?pedido=<id>`, e o botão "Ir para o rastreio" no `ProductPurchasePanel` idem — a rota ainda não existe, então esses links dão 404 até esta fase.
+**Próximo passo:** Fase 7 — **Conta** (`/conta`, seção 06). Entrada por e-mail (link mágico ou senha, sem login social obrigatório); pedidos (lista + status, reaproveitando `lib/orders.ts`/`lib/tracking.ts`); arquivo pessoal de peças recebidas; desejos e avisos; endereços. Como ainda não há backend/autenticação real, decidir como simular login de forma honesta (ex.: sessão local por e-mail, sem senha de verdade) antes de começar.
 
 **Regra a manter em toda fase daqui pra frente:** nunca nomear uma variável local `window` — 3 bugs desta sessão vieram disso (sombreia o `window` global; um deles quebrou `window.location.href` silenciosamente, sem erro de lint/TS). Use `arrivalWindow`/`itemArrivalWindow` etc.
 
@@ -31,7 +32,7 @@ Não vendemos roupa. Vendemos o acesso a uma peça que quase ninguém consegue t
 - **Limitação conhecida, não resolvida:** `/arquivo` é um Client Component (`useSearchParams`) dentro de `<Suspense>` — o HTML estático inicial mostra só o fallback "Carregando arquivo…", os produtos só aparecem após a hidratação. Funciona bem para usuário, mas é fraco para SEO/crawlers que não executam JS. Se SEO do catálogo importar, revisitar com filtragem server-side (`searchParams` prop do Server Component + links em vez de checkboxes controlados).
 - **Windows + OneDrive:** `npm run build` às vezes falha com `EPERM: operation not permitted, rmdir '.next/...'` porque o projeto está dentro de uma pasta sincronizada pelo OneDrive. Solução: `rm -rf .next` e rodar de novo.
 - **Next dev em modo dev compila rotas sob demanda.** Na primeira visita a uma rota ainda não compilada (ex.: `/sacola` logo após o servidor subir), a navegação pode demorar mais que o esperado. Ao testar com Playwright, use `page.waitForURL(...)` em vez de `waitForTimeout` fixo após cliques que navegam.
-- Testado com Playwright (Chromium headless) em todas as 5 fases, incluindo o fluxo de compra completo (produto → sacola → checkout → confirmação) de ponta a ponta: zero erros de console reais no estado atual.
+- Testado com Playwright (Chromium headless) em todas as 6 fases, incluindo o fluxo de compra completo (produto → sacola → checkout → confirmação → rastreio) de ponta a ponta: zero erros de console reais no estado atual.
 
 ## Como usar este documento
 
