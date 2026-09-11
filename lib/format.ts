@@ -42,6 +42,11 @@ export function getArrivalWindowLabels(window: ArrivalWindow): ArrivalWindowLabe
   return { startLabel, endLabel };
 }
 
+/** "Chega até 17 de novembro" — usado em cards e na sacola (variante compacta). */
+export function formatArrivalUntilLabel(window: ArrivalWindow): string {
+  return `Chega até ${formatDayMonth(window.end)}`;
+}
+
 export function formatOrderCode(id: string | number): string {
   return `#${String(id).toUpperCase()}`;
 }

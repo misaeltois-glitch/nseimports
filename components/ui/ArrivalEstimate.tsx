@@ -1,5 +1,5 @@
 import { getArrivalWindow, type ArrivalWindow } from "@/lib/business-days";
-import { formatDayMonth, getArrivalWindowLabels } from "@/lib/format";
+import { formatArrivalUntilLabel, getArrivalWindowLabels } from "@/lib/format";
 
 export type ArrivalEstimateVariant = "inline" | "destaque" | "compacta";
 
@@ -22,7 +22,7 @@ export function ArrivalEstimate({
   if (variant === "compacta") {
     return (
       <span className={`font-mono text-[11px] text-marfim/60 ${className}`}>
-        Chega até {formatDayMonth(resolved.end)}
+        {formatArrivalUntilLabel(resolved)}
       </span>
     );
   }

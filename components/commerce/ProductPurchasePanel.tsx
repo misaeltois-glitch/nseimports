@@ -9,6 +9,7 @@ import { PackagingPicker } from "@/components/ui/PackagingPicker";
 import { WaitlistForm } from "@/components/ui/WaitlistForm";
 import { useToast } from "@/components/ui/Toast";
 import type { ArrivalWindow } from "@/lib/business-days";
+import { useCartStore } from "@/lib/cart-store";
 import { formatInstallments, formatPriceBRL } from "@/lib/format";
 import { PACKAGING_LEVELS } from "@/content/mock-packaging";
 import type { PackagingLevelId, ProductDetail } from "@/types/product";
@@ -28,6 +29,7 @@ export function ProductPurchasePanel({
   const [size, setSize] = useState<string | null>(null);
   const [packaging, setPackaging] = useState<PackagingLevelId>("padrao");
   const { show } = useToast();
+  const addItem = useCartStore((state) => state.addItem);
   const hasSizes = product.sizes.length > 0;
 
   function handleReserve() {
@@ -35,7 +37,18 @@ export function ProductPurchasePanel({
       show("Escolha um tamanho antes de reservar.", "erro");
       return;
     }
-    show("Peça reservada por 30 minutos.");
+    addItem({
+      productSlug: product.slug,
+      brand: product.brand,
+      name: product.name,
+      referencia: product.referencia,
+      rarity: product.rarity,
+      priceCents: product.priceCents,
+      sizeLabel: size,
+      packagingId: packaging,
+      diasRestantes: product.diasRestantes,
+    });
+    show("Peça adicionada à sacola.");
   }
 
   if (product.stockAvailable === 0) {

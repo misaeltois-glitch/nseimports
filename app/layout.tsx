@@ -31,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-onix text-marfim">
         <ToastProvider>
-          <Header cartCount={0} />
+          <Header />
           <div className="flex flex-1 flex-col">{children}</div>
           <Footer />
         </ToastProvider>

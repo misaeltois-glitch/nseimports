@@ -42,7 +42,7 @@ export function CartDrawer({
             </Dialog.Close>
           </div>
 
-          <div className="mt-6 flex-1 overflow-y-auto">
+          <div className="mt-6 min-h-0 flex-1 overflow-y-auto">
             {lines.length === 0 ? (
               <p className="text-[13px] text-marfim/50">Sua sacola está vazia.</p>
             ) : (
@@ -72,8 +72,14 @@ export function CartDrawer({
               <span className="text-marfim/70">Subtotal</span>
               <span className="font-mono text-marfim">{formatPriceBRL(subtotalCents)}</span>
             </div>
-            <Button variant="solido" className="mt-4 w-full" disabled={lines.length === 0}>
-              Fechar pedido
+            <Button
+              href="/sacola"
+              onClick={() => onOpenChange(false)}
+              variant="solido"
+              className="mt-4 w-full"
+              disabled={lines.length === 0}
+            >
+              Ver sacola
             </Button>
           </div>
         </Dialog.Content>

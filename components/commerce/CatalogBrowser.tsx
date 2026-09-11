@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
@@ -194,9 +193,9 @@ export function CatalogBrowser() {
             title="Nenhuma peça com esses filtros."
             description="Entre na lista e avisamos quando entrar uma."
             action={
-              <Link href="/lista">
-                <Button variant="contornado">Entrar na lista</Button>
-              </Link>
+              <Button href="/lista" variant="contornado">
+                Entrar na lista
+              </Button>
             }
           />
         ) : (

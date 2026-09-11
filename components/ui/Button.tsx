@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { forwardRef } from "react";
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { ButtonHTMLAttributes, MouseEventHandler, ReactNode } from "react";
 
 export type ButtonVariant = "solido" | "contornado" | "fantasma" | "icone";
 
@@ -11,6 +12,15 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   primary?: boolean;
   loading?: boolean;
   icon?: ReactNode;
+  /**
+   * Quando presente, renderiza como link de navegação em vez de <button>.
+   * Nunca envolver Button num <Link> por fora — <a><button></button></a> é
+   * aninhamento de elementos interativos inválido e quebra o hit-testing.
+   */
+  href?: string;
+  target?: string;
+  rel?: string;
+  onClick?: MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
 }
 
 const base =
@@ -42,6 +52,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       primary = false,
       loading = false,
       icon,
+      href,
+      target,
+      rel,
+      onClick,
       className = "",
       children,
       disabled,
@@ -49,12 +63,32 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) {
+    const classes = `${base} ${variantClasses(variant, primary)} ${className}`;
+
+    if (href) {
+      if (disabled || loading) {
+        return (
+          <span className={`${classes} cursor-not-allowed opacity-40`} aria-disabled="true">
+            {icon}
+            {children}
+          </span>
+        );
+      }
+      return (
+        <Link href={href} target={target} rel={rel} onClick={onClick} className={classes}>
+          {icon}
+          {children}
+        </Link>
+      );
+    }
+
     return (
       <button
         ref={ref}
-        className={`${base} ${variantClasses(variant, primary)} ${className}`}
+        className={classes}
         disabled={disabled || loading}
         aria-busy={loading || undefined}
+        onClick={onClick}
         {...props}
       >
         {loading ? (

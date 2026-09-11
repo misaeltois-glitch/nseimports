@@ -2,6 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { getArrivalWindow } from "@/lib/business-days";
+import { useCartHydrated, useCartStore } from "@/lib/cart-store";
+import { formatArrivalUntilLabel } from "@/lib/format";
+import { PACKAGING_LEVELS } from "@/content/mock-packaging";
+import { CartDrawer, type CartLine } from "./CartDrawer";
 
 const NAV_LINKS = [
   { label: "Arquivo", href: "/arquivo" },
@@ -11,8 +16,11 @@ const NAV_LINKS = [
 ];
 
 /** Header transparente no topo, sólido ao rolar (BRIEF.md, seções 06 e 09). */
-export function Header({ cartCount = 0 }: { cartCount?: number }) {
+export function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const hydrated = useCartHydrated();
+  const items = useCartStore((state) => state.items);
 
   useEffect(() => {
     function handleScroll() {
@@ -22,6 +30,26 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const cartItems = hydrated ? items : [];
+
+  const lines: CartLine[] = cartItems.map((item) => {
+    const level = PACKAGING_LEVELS.find((l) => l.id === item.packagingId);
+    const itemArrivalWindow = getArrivalWindow(new Date(), {
+      minBusinessDays: item.diasRestantes,
+      maxBusinessDays: item.diasRestantes + 7,
+    });
+    return {
+      id: item.id,
+      name: `${item.brand} · ${item.name}`,
+      sizeLabel: item.sizeLabel ?? "Único",
+      packagingLabel: level?.name ?? "Padrão",
+      priceCents: item.priceCents + (typeof level?.priceCents === "number" ? level.priceCents : 0),
+      arrivalLabel: formatArrivalUntilLabel(itemArrivalWindow),
+    };
+  });
+
+  const subtotalCents = lines.reduce((sum, line) => sum + line.priceCents, 0);
 
   return (
     <header
@@ -45,12 +73,20 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
         <button
           type="button"
           aria-label="Abrir sacola"
+          onClick={() => setCartOpen(true)}
           className="flex items-center gap-2 text-[13px] text-marfim/80 hover:text-marfim"
         >
           Sacola
-          <span className="font-mono text-[11px] text-marfim/50">({cartCount})</span>
+          <span className="font-mono text-[11px] text-marfim/50">({cartItems.length})</span>
         </button>
       </div>
+
+      <CartDrawer
+        open={cartOpen}
+        onOpenChange={setCartOpen}
+        lines={lines}
+        subtotalCents={subtotalCents}
+      />
     </header>
   );
 }
