@@ -8,24 +8,30 @@ Não vendemos roupa. Vendemos o acesso a uma peça que quase ninguém consegue t
 
 ## Status do projeto (ler primeiro)
 
-*Atualizado em 2026-09-11, fim da sessão que implementou as fases 1–4.*
+*Atualizado em 2026-09-11, fim da sessão que implementou as fases 1–5.*
 
-**Feito e em produção** (commits `2d91d59` → `9916577`, deploy automático via push para `main` no Vercel):
+**Feito e em produção** (commits `2d91d59` → `0b5cbdd`, deploy automático via push para `main` no Vercel):
 
 1. **Fundação** — tokens (cores/tipografia/raio) em `app/globals.css` via Tailwind v4 `@theme inline`; fontes Archivo (display/corpo) + JetBrains Mono (dados) — as fontes pagas do briefing (Neue Haas Grotesk, Söhne, Suisse Int'l) não estão disponíveis, uso as alternativas livres que o próprio briefing autoriza. `lib/business-days.ts` (cálculo de dias úteis com feriados fixos, testado em `lib/business-days.test.ts`). Os 18 componentes de `components/ui/`, revisáveis em `/estilo`.
 2. **Home** (`app/page.tsx`) — sete blocos da seção 06.
 3. **Produto** (`app/arquivo/[slug]/page.tsx`) — dossiê completo, galeria + painel de decisão (`components/commerce/ProductPurchasePanel.tsx`), procedência, conferência, relacionados.
 4. **Catálogo** (`app/arquivo/page.tsx` + `components/commerce/CatalogBrowser.tsx`) — filtros com estado na URL, ordenação, "carregar mais", estado vazio e esgotado.
+5. **Sacola e checkout** (`/sacola`, `/checkout`, `/pedido/[id]`) — carrinho em Zustand persistido em localStorage (`lib/cart-store.ts`), embalagem editável por item, escolha "enviar junto/em partes" quando os prazos divergem, checkout em 3 passos com CEP autopreenchido via ViaCEP (`lib/cep.ts`), reserva de 30 min com contador, e confirmação com link de WhatsApp/rastreio. Pedidos ficam em localStorage (`lib/orders.ts`) — ainda não há backend real.
 
 **Dados:** tudo em mocks (`content/mock-products.ts`, `mock-product-details.ts`, `mock-packaging.ts`, `mock-order-stages.ts`) — 8 produtos cobrindo as 5 categorias. Ainda não existe `/content/products/*.json` validado com Zod (isso é do "Técnico", seção 10, não amarrado a uma fase específica — decidir quando migrar).
 
-**Próximo passo:** Fase 5 — **Sacola e checkout** (seção 06). Vai precisar: Zustand para o carrinho (persistido em localStorage, ainda não instalado), as rotas `/sacola` e `/checkout`, e decidir o provedor de pagamento (ainda em aberto, seção 13 do briefing original). `CartDrawer` (UI) já existe em `components/ui/` desde a Fase 1, mas sem estado real conectado — o header (`components/ui/Header.tsx`) tem um botão "Sacola" sem `onClick` ainda.
+**Próximo passo:** Fase 6 — **Rastreio** (`/rastrear`, seção 06). É pública, por código de pedido, sem login — vai ler de `lib/orders.ts` (mesmo mecanismo de localStorage da confirmação). O link "Ir para o rastreio" na confirmação já aponta para `/rastrear?pedido=<id>`, e o botão "Ir para o rastreio" no `ProductPurchasePanel` idem — a rota ainda não existe, então esses links dão 404 até esta fase.
+
+**Regra a manter em toda fase daqui pra frente:** nunca nomear uma variável local `window` — 3 bugs desta sessão vieram disso (sombreia o `window` global; um deles quebrou `window.location.href` silenciosamente, sem erro de lint/TS). Use `arrivalWindow`/`itemArrivalWindow` etc.
 
 **Achados/decisões que a próxima sessão precisa saber:**
-- **Bug real de framework:** `router.push`/`router.replace` (`next/navigation`) não atualiza a URL em navegações que só mudam a query string, nesta versão do Next.js (16.3.4). `CatalogBrowser.tsx` usa `window.history.pushState` como solução (comentário no código explica o porquê). Se qualquer fase futura precisar de navegação client-side por query string (ex: paginação de pedidos em `/conta`), usar o mesmo padrão, não `router.push`.
+- **Bug real de framework:** `router.push`/`router.replace` (`next/navigation`) não navega de forma confiável nesta versão do Next.js (16.3.4) — nem para troca de query string (achado na Fase 4) nem para troca de rota completa (achado na Fase 5, no envio final do checkout). Nos dois casos usei a API nativa do browser em vez do router do Next: `window.history.pushState` para navegação só de query string (mesma página, `CatalogBrowser.tsx`), e `window.location.href` para navegação de rota completa (`CheckoutFlow.tsx`, com `eslint-disable` comentado explicando o motivo). Se uma fase futura precisar de navegação client-side, prefira esse padrão a `router.push`/`.replace` — teste com um clique real antes de confiar nele.
+- **Nunca envolva `<Button>` dentro de `<Link>`.** `<a><button></button></a>` é aninhamento de elementos interativos inválido e quebra o hit-testing de clique (achei isso em 6 lugares na Fase 5). `Button` agora aceita uma prop `href` (e `target`/`rel`/`onClick`) e renderiza como link sozinho — use isso, nunca `<Link><Button>`.
+- **`useSyncExternalStore` precisa de um `getSnapshot` com resultado cacheado/estável.** Se a função de leitura cria um objeto novo a cada chamada (ex: `JSON.parse`), o React entra em loop e avisa "getSnapshot should be cached". Ver o padrão de cache em `components/commerce/OrderConfirmation.tsx`.
 - **Limitação conhecida, não resolvida:** `/arquivo` é um Client Component (`useSearchParams`) dentro de `<Suspense>` — o HTML estático inicial mostra só o fallback "Carregando arquivo…", os produtos só aparecem após a hidratação. Funciona bem para usuário, mas é fraco para SEO/crawlers que não executam JS. Se SEO do catálogo importar, revisitar com filtragem server-side (`searchParams` prop do Server Component + links em vez de checkboxes controlados).
 - **Windows + OneDrive:** `npm run build` às vezes falha com `EPERM: operation not permitted, rmdir '.next/...'` porque o projeto está dentro de uma pasta sincronizada pelo OneDrive. Solução: `rm -rf .next` e rodar de novo.
-- Testado nas 8 fases já construídas com Playwright (Chromium headless): zero erros de console reais (o único aviso, `caret-color` em hidratação, é artefato do próprio Chromium headless, não do app).
+- **Next dev em modo dev compila rotas sob demanda.** Na primeira visita a uma rota ainda não compilada (ex.: `/sacola` logo após o servidor subir), a navegação pode demorar mais que o esperado. Ao testar com Playwright, use `page.waitForURL(...)` em vez de `waitForTimeout` fixo após cliques que navegam.
+- Testado com Playwright (Chromium headless) em todas as 5 fases, incluindo o fluxo de compra completo (produto → sacola → checkout → confirmação) de ponta a ponta: zero erros de console reais no estado atual.
 
 ## Como usar este documento
 
