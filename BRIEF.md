@@ -6,6 +6,27 @@ Não vendemos roupa. Vendemos o acesso a uma peça que quase ninguém consegue t
 
 **Tags:** Streetwear importado · Colecionáveis · Alto valor · 45 dias úteis, sem rodeio
 
+## Status do projeto (ler primeiro)
+
+*Atualizado em 2026-09-11, fim da sessão que implementou as fases 1–4.*
+
+**Feito e em produção** (commits `2d91d59` → `9916577`, deploy automático via push para `main` no Vercel):
+
+1. **Fundação** — tokens (cores/tipografia/raio) em `app/globals.css` via Tailwind v4 `@theme inline`; fontes Archivo (display/corpo) + JetBrains Mono (dados) — as fontes pagas do briefing (Neue Haas Grotesk, Söhne, Suisse Int'l) não estão disponíveis, uso as alternativas livres que o próprio briefing autoriza. `lib/business-days.ts` (cálculo de dias úteis com feriados fixos, testado em `lib/business-days.test.ts`). Os 18 componentes de `components/ui/`, revisáveis em `/estilo`.
+2. **Home** (`app/page.tsx`) — sete blocos da seção 06.
+3. **Produto** (`app/arquivo/[slug]/page.tsx`) — dossiê completo, galeria + painel de decisão (`components/commerce/ProductPurchasePanel.tsx`), procedência, conferência, relacionados.
+4. **Catálogo** (`app/arquivo/page.tsx` + `components/commerce/CatalogBrowser.tsx`) — filtros com estado na URL, ordenação, "carregar mais", estado vazio e esgotado.
+
+**Dados:** tudo em mocks (`content/mock-products.ts`, `mock-product-details.ts`, `mock-packaging.ts`, `mock-order-stages.ts`) — 8 produtos cobrindo as 5 categorias. Ainda não existe `/content/products/*.json` validado com Zod (isso é do "Técnico", seção 10, não amarrado a uma fase específica — decidir quando migrar).
+
+**Próximo passo:** Fase 5 — **Sacola e checkout** (seção 06). Vai precisar: Zustand para o carrinho (persistido em localStorage, ainda não instalado), as rotas `/sacola` e `/checkout`, e decidir o provedor de pagamento (ainda em aberto, seção 13 do briefing original). `CartDrawer` (UI) já existe em `components/ui/` desde a Fase 1, mas sem estado real conectado — o header (`components/ui/Header.tsx`) tem um botão "Sacola" sem `onClick` ainda.
+
+**Achados/decisões que a próxima sessão precisa saber:**
+- **Bug real de framework:** `router.push`/`router.replace` (`next/navigation`) não atualiza a URL em navegações que só mudam a query string, nesta versão do Next.js (16.3.4). `CatalogBrowser.tsx` usa `window.history.pushState` como solução (comentário no código explica o porquê). Se qualquer fase futura precisar de navegação client-side por query string (ex: paginação de pedidos em `/conta`), usar o mesmo padrão, não `router.push`.
+- **Limitação conhecida, não resolvida:** `/arquivo` é um Client Component (`useSearchParams`) dentro de `<Suspense>` — o HTML estático inicial mostra só o fallback "Carregando arquivo…", os produtos só aparecem após a hidratação. Funciona bem para usuário, mas é fraco para SEO/crawlers que não executam JS. Se SEO do catálogo importar, revisitar com filtragem server-side (`searchParams` prop do Server Component + links em vez de checkboxes controlados).
+- **Windows + OneDrive:** `npm run build` às vezes falha com `EPERM: operation not permitted, rmdir '.next/...'` porque o projeto está dentro de uma pasta sincronizada pelo OneDrive. Solução: `rm -rf .next` e rodar de novo.
+- Testado nas 8 fases já construídas com Playwright (Chromium headless): zero erros de console reais (o único aviso, `caret-color` em hidratação, é artefato do próprio Chromium headless, não do app).
+
 ## Como usar este documento
 
 Peça a construção na ordem: **tokens e componentes base → Home → Produto → Catálogo → Sacola e checkout → Rastreio → Conta → Drops → Lista de espera → Admin**. As seções 03, 04, 07 e 08 são inegociáveis: nenhuma decisão visual pode contrariá-las.
