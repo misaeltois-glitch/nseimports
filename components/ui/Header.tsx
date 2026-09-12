@@ -70,15 +70,20 @@ export function Header() {
           ))}
         </nav>
 
-        <button
-          type="button"
-          aria-label="Abrir sacola"
-          onClick={() => setCartOpen(true)}
-          className="flex items-center gap-2 text-[13px] text-marfim/80 hover:text-marfim"
-        >
-          Sacola
-          <span className="font-mono text-[11px] text-marfim/50">({cartItems.length})</span>
-        </button>
+        <div className="flex items-center gap-5">
+          <Link href="/conta" className="hidden text-[13px] text-marfim/80 hover:text-marfim sm:block">
+            Conta
+          </Link>
+          <button
+            type="button"
+            aria-label="Abrir sacola"
+            onClick={() => setCartOpen(true)}
+            className="flex items-center gap-2 text-[13px] text-marfim/80 hover:text-marfim"
+          >
+            Sacola
+            <span className="font-mono text-[11px] text-marfim/50">({cartItems.length})</span>
+          </button>
+        </div>
       </div>
 
       <CartDrawer

@@ -6,6 +6,7 @@ const SITEMAP = [
   { label: "Processo", href: "/processo" },
   { label: "Embalagem", href: "/embalagem" },
   { label: "Rastrear", href: "/rastrear" },
+  { label: "Conta", href: "/conta" },
   { label: "Sobre", href: "/sobre" },
   { label: "Dúvidas", href: "/duvidas" },
   { label: "Lista de espera", href: "/lista" },

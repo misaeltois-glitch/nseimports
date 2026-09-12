@@ -114,3 +114,8 @@ export function buildTrackingInfo(order: Order): TrackingInfo {
     progressPercent,
   };
 }
+
+/** Peça já entregue — usada para montar o "arquivo pessoal" (BRIEF.md, seção 06 — Conta). */
+export function isOrderDelivered(order: Order): boolean {
+  return buildTrackingInfo(order).stages.every((stage) => stage.status === "concluida");
+}
