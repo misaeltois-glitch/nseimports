@@ -10,6 +10,7 @@ export interface WaitlistEntry {
   email: string;
   whatsapp: string;
   submittedAt: string;
+  responded?: boolean;
 }
 
 const waitlistStore = createLocalStore<WaitlistEntry[]>("nse-waitlist", []);
@@ -27,4 +28,16 @@ export function addToWaitlist(data: Record<string, string>): number {
   const next = [...waitlistStore.get(), entry];
   waitlistStore.set(next);
   return next.length;
+}
+
+/** Todas as entradas, mais antigas primeiro — é assim que a fila avança (BRIEF.md, seção 06 — Admin). */
+export function useWaitlistEntries(): WaitlistEntry[] {
+  return waitlistStore.useValue();
+}
+
+export function markWaitlistResponded(submittedAt: string) {
+  const next = waitlistStore
+    .get()
+    .map((entry) => (entry.submittedAt === submittedAt ? { ...entry, responded: true } : entry));
+  waitlistStore.set(next);
 }

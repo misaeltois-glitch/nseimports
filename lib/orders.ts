@@ -16,6 +16,12 @@ export interface Order {
   arrivalWindowStart: string;
   arrivalWindowEnd: string;
   createdAt: string;
+  /**
+   * Etapa (0-4) definida manualmente pelo admin — quando presente, tem
+   * prioridade sobre a etapa calculada a partir dos dias úteis decorridos
+   * (BRIEF.md, seção 06 — Admin: "botão para avançar etapa").
+   */
+  currentStageIndex?: number;
 }
 
 const ordersStore = createLocalStore<Record<string, Order>>("nse-orders", {});
@@ -37,6 +43,15 @@ export function createOrder(data: Omit<Order, "id" | "createdAt">): Order {
 
 export function getOrder(id: string): Order | undefined {
   return ordersStore.get()[id];
+}
+
+/** Avança o pedido para a próxima etapa (admin) — no mundo real, dispara a notificação ao cliente. */
+export function advanceOrderStage(id: string, currentIndex: number): void {
+  const orders = ordersStore.get();
+  const order = orders[id];
+  if (!order) return;
+  const nextIndex = Math.min(4, currentIndex + 1);
+  ordersStore.set({ ...orders, [id]: { ...order, currentStageIndex: nextIndex } });
 }
 
 /** Todos os pedidos deste navegador, mais recentes primeiro (BRIEF.md, seção 06 — Conta). */

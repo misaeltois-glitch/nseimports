@@ -83,7 +83,22 @@ export function buildTrackingInfo(order: Order): TrackingInfo {
     const startDay = cumulative;
     cumulative += def.days;
     const endDay = cumulative;
-    const status = elapsed >= endDay ? "concluida" : elapsed >= startDay ? "atual" : "futura";
+
+    // O admin pode avançar a etapa manualmente (BRIEF.md, seção 06 — Admin);
+    // quando isso acontece, o índice definido por ele manda, em vez do
+    // cálculo automático por dias úteis decorridos.
+    const status =
+      order.currentStageIndex !== undefined
+        ? index < order.currentStageIndex
+          ? "concluida"
+          : index === order.currentStageIndex
+            ? "atual"
+            : "futura"
+        : elapsed >= endDay
+          ? "concluida"
+          : elapsed >= startDay
+            ? "atual"
+            : "futura";
     const dateLabel =
       status === "futura" ? undefined : formatDayMonth(addBusinessDays(createdAt, endDay));
 
