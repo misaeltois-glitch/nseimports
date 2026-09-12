@@ -8,9 +8,9 @@ Não vendemos roupa. Vendemos o acesso a uma peça que quase ninguém consegue t
 
 ## Status do projeto (ler primeiro)
 
-*Atualizado em 2026-09-11, fim da sessão que implementou as fases 1–6.*
+*Atualizado em 2026-09-11, fim da sessão que implementou as fases 1–7.*
 
-**Feito e em produção** (commits `2d91d59` → `1df9336`, deploy automático via push para `main` no Vercel):
+**Feito e em produção** (commits `2d91d59` → `c94e6e4`, deploy automático via push para `main` no Vercel):
 
 1. **Fundação** — tokens (cores/tipografia/raio) em `app/globals.css` via Tailwind v4 `@theme inline`; fontes Archivo (display/corpo) + JetBrains Mono (dados) — as fontes pagas do briefing (Neue Haas Grotesk, Söhne, Suisse Int'l) não estão disponíveis, uso as alternativas livres que o próprio briefing autoriza. `lib/business-days.ts` (cálculo de dias úteis com feriados fixos, testado em `lib/business-days.test.ts`). Os 18 componentes de `components/ui/`, revisáveis em `/estilo`.
 2. **Home** (`app/page.tsx`) — sete blocos da seção 06.
@@ -18,21 +18,23 @@ Não vendemos roupa. Vendemos o acesso a uma peça que quase ninguém consegue t
 4. **Catálogo** (`app/arquivo/page.tsx` + `components/commerce/CatalogBrowser.tsx`) — filtros com estado na URL, ordenação, "carregar mais", estado vazio e esgotado.
 5. **Sacola e checkout** (`/sacola`, `/checkout`, `/pedido/[id]`) — carrinho em Zustand persistido em localStorage (`lib/cart-store.ts`), embalagem editável por item, escolha "enviar junto/em partes" quando os prazos divergem, checkout em 3 passos com CEP autopreenchido via ViaCEP (`lib/cep.ts`), reserva de 30 min com contador, e confirmação com link de WhatsApp/rastreio. Pedidos ficam em localStorage (`lib/orders.ts`) — ainda não há backend real.
 6. **Rastreio** (`/rastrear` + `components/commerce/TrackingLookup.tsx`) — consulta pública por código, sem login. A etapa atual é derivada dos dias úteis decorridos desde a criação do pedido (`lib/tracking.ts`), já que ainda não há backend rastreando etapa por etapa de verdade.
+7. **Conta** (`/conta`) — entrada por e-mail com "link mágico" simulado (`lib/account.ts`, sem servidor de e-mail — a tela deixa isso explícito), pedidos, arquivo pessoal (peças com `isOrderDelivered` verdadeiro), desejos (`lib/wishlist.ts` — coração no `ProductCard`) e endereços (`lib/addresses.ts`).
 
 **Dados:** tudo em mocks (`content/mock-products.ts`, `mock-product-details.ts`, `mock-packaging.ts`, `mock-order-stages.ts`) — 8 produtos cobrindo as 5 categorias. Ainda não existe `/content/products/*.json` validado com Zod (isso é do "Técnico", seção 10, não amarrado a uma fase específica — decidir quando migrar).
 
-**Próximo passo:** Fase 7 — **Conta** (`/conta`, seção 06). Entrada por e-mail (link mágico ou senha, sem login social obrigatório); pedidos (lista + status, reaproveitando `lib/orders.ts`/`lib/tracking.ts`); arquivo pessoal de peças recebidas; desejos e avisos; endereços. Como ainda não há backend/autenticação real, decidir como simular login de forma honesta (ex.: sessão local por e-mail, sem senha de verdade) antes de começar.
+**Próximo passo:** Fase 8 — **Drops e diário** (`/drops`, `/drops/[slug]`, seção 06). Duas naturezas no mesmo índice (Drop com contagem regressiva, Diário/bastidor), post em coluna única, relacionados + entrada na lista de espera no fim de todo post. `/lista` (Fase 9) ainda não existe — os links "Entrar na lista" espalhados pelo site (Catálogo, produto esgotado) continuam dando 404 até lá.
 
 **Regra a manter em toda fase daqui pra frente:** nunca nomear uma variável local `window` — 3 bugs desta sessão vieram disso (sombreia o `window` global; um deles quebrou `window.location.href` silenciosamente, sem erro de lint/TS). Use `arrivalWindow`/`itemArrivalWindow` etc.
 
 **Achados/decisões que a próxima sessão precisa saber:**
 - **Bug real de framework:** `router.push`/`router.replace` (`next/navigation`) não navega de forma confiável nesta versão do Next.js (16.3.4) — nem para troca de query string (achado na Fase 4) nem para troca de rota completa (achado na Fase 5, no envio final do checkout). Nos dois casos usei a API nativa do browser em vez do router do Next: `window.history.pushState` para navegação só de query string (mesma página, `CatalogBrowser.tsx`), e `window.location.href` para navegação de rota completa (`CheckoutFlow.tsx`, com `eslint-disable` comentado explicando o motivo). Se uma fase futura precisar de navegação client-side, prefira esse padrão a `router.push`/`.replace` — teste com um clique real antes de confiar nele.
-- **Nunca envolva `<Button>` dentro de `<Link>`.** `<a><button></button></a>` é aninhamento de elementos interativos inválido e quebra o hit-testing de clique (achei isso em 6 lugares na Fase 5). `Button` agora aceita uma prop `href` (e `target`/`rel`/`onClick`) e renderiza como link sozinho — use isso, nunca `<Link><Button>`.
-- **`useSyncExternalStore` precisa de um `getSnapshot` com resultado cacheado/estável.** Se a função de leitura cria um objeto novo a cada chamada (ex: `JSON.parse`), o React entra em loop e avisa "getSnapshot should be cached". Ver o padrão de cache em `components/commerce/OrderConfirmation.tsx`.
+- **Nunca envolva `<Button>` dentro de `<Link>` (nem nenhum elemento interativo dentro de outro).** `<a><button></button></a>` quebra o hit-testing de clique (achei isso em 6 lugares na Fase 5). `Button` aceita uma prop `href` (e `target`/`rel`/`onClick`) e renderiza como link sozinho. O `ProductCard` (Fase 7) tem o mesmo cuidado: o coração de desejos é **irmão** do `Link` de navegação, nunca filho dele.
+- **`useSyncExternalStore` precisa de um `getSnapshot` com resultado cacheado/estável**, senão o React entra em loop ("getSnapshot should be cached"). Isso já está resolvido de vez: `lib/local-store.ts` é um store genérico sobre localStorage com esse cache embutido — qualquer dado novo persistido no browser (contas, listas, preferências) deve usar `createLocalStore` dali, não reimplementar a leitura na mão. `lib/orders.ts`, `lib/account.ts`, `lib/wishlist.ts` e `lib/addresses.ts` já usam esse padrão.
 - **Limitação conhecida, não resolvida:** `/arquivo` é um Client Component (`useSearchParams`) dentro de `<Suspense>` — o HTML estático inicial mostra só o fallback "Carregando arquivo…", os produtos só aparecem após a hidratação. Funciona bem para usuário, mas é fraco para SEO/crawlers que não executam JS. Se SEO do catálogo importar, revisitar com filtragem server-side (`searchParams` prop do Server Component + links em vez de checkboxes controlados).
 - **Windows + OneDrive:** `npm run build` às vezes falha com `EPERM: operation not permitted, rmdir '.next/...'` porque o projeto está dentro de uma pasta sincronizada pelo OneDrive. Solução: `rm -rf .next` e rodar de novo.
 - **Next dev em modo dev compila rotas sob demanda.** Na primeira visita a uma rota ainda não compilada (ex.: `/sacola` logo após o servidor subir), a navegação pode demorar mais que o esperado. Ao testar com Playwright, use `page.waitForURL(...)` em vez de `waitForTimeout` fixo após cliques que navegam.
-- Testado com Playwright (Chromium headless) em todas as 6 fases, incluindo o fluxo de compra completo (produto → sacola → checkout → confirmação → rastreio) de ponta a ponta: zero erros de console reais no estado atual.
+- **Se um teste com Playwright reportar "elemento inacessível" numa página com scroll, verifique `scrollIntoViewIfNeeded()` antes de suspeitar de bug real.** Perdi um tempo achando que o botão de desejos não funcionava — era só o elemento estar fora da viewport visível no teste (clique por coordenada não rola a página sozinho, ao contrário do `.click()` padrão do Playwright).
+- Testado com Playwright (Chromium headless) em todas as 7 fases, incluindo o fluxo de compra completo (produto → sacola → checkout → confirmação → rastreio → conta) de ponta a ponta: zero erros de console reais no estado atual.
 
 ## Como usar este documento
 
