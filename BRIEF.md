@@ -8,9 +8,9 @@ Não vendemos roupa. Vendemos o acesso a uma peça que quase ninguém consegue t
 
 ## Status do projeto (ler primeiro)
 
-*Atualizado em 2026-09-11, fim da sessão que implementou as fases 1–8.*
+*Atualizado em 2026-09-11, fim da sessão que implementou as fases 1–9.*
 
-**Feito e em produção** (commits `2d91d59` → `0f4b254`, deploy automático via push para `main` no Vercel):
+**Feito e em produção** (commits `2d91d59` → `fd3f20e`, deploy automático via push para `main` no Vercel):
 
 1. **Fundação** — tokens (cores/tipografia/raio) em `app/globals.css` via Tailwind v4 `@theme inline`; fontes Archivo (display/corpo) + JetBrains Mono (dados) — as fontes pagas do briefing (Neue Haas Grotesk, Söhne, Suisse Int'l) não estão disponíveis, uso as alternativas livres que o próprio briefing autoriza. `lib/business-days.ts` (cálculo de dias úteis com feriados fixos, testado em `lib/business-days.test.ts`). Os 18 componentes de `components/ui/`, revisáveis em `/estilo`.
 2. **Home** (`app/page.tsx`) — sete blocos da seção 06.
@@ -20,10 +20,11 @@ Não vendemos roupa. Vendemos o acesso a uma peça que quase ninguém consegue t
 6. **Rastreio** (`/rastrear` + `components/commerce/TrackingLookup.tsx`) — consulta pública por código, sem login. A etapa atual é derivada dos dias úteis decorridos desde a criação do pedido (`lib/tracking.ts`), já que ainda não há backend rastreando etapa por etapa de verdade.
 7. **Conta** (`/conta`) — entrada por e-mail com "link mágico" simulado (`lib/account.ts`, sem servidor de e-mail — a tela deixa isso explícito), pedidos, arquivo pessoal (peças com `isOrderDelivered` verdadeiro), desejos (`lib/wishlist.ts` — coração no `ProductCard`) e endereços (`lib/addresses.ts`).
 8. **Drops e diário** (`/drops`, `/drops/[slug]`) — índice com Drop (contagem regressiva em mono até a abertura do lote, `components/commerce/DropCountdown.tsx`) e Diário (bastidor) diferenciados por tag; post em coluna estreita (~68ch) com imagens mais largas e citação com barra dourada; toda página termina em relacionados + `WaitlistForm`.
+9. **Lista de espera** (`/lista`) — reaproveita o `WaitlistForm` (não recriado); adicionei o campo "Tamanho" que faltava nele e `lib/waitlist.ts` (padrão `local-store.ts`) para persistir entradas e mostrar a posição na fila em mono na confirmação, quando há fila de verdade (posição > 1). Isso tira do ar os 404 dos links "Entrar na lista" espalhados pelo Catálogo vazio, produto esgotado e fim de post de drop.
 
 **Dados:** tudo em mocks (`content/mock-products.ts`, `mock-product-details.ts`, `mock-packaging.ts`, `mock-order-stages.ts`, `mock-drops.ts`) — 8 produtos cobrindo as 5 categorias, 4 posts (2 drop, 2 diário). Ainda não existe `/content/products/*.json` validado com Zod (isso é do "Técnico", seção 10, não amarrado a uma fase específica — decidir quando migrar).
 
-**Próximo passo:** Fase 9 — **Lista de espera** (`/lista`, seção 06). Formulário curto (peça desejada, tamanho, faixa de preço, e-mail, WhatsApp) + confirmação com posição na fila em mono. Isso resolve os vários links "Entrar na lista" espalhados pelo site (Catálogo vazio, produto esgotado, fim de cada post de drop) que hoje dão 404 — reaproveitar `WaitlistForm` (`components/ui/`, já existe desde a Fase 1) em vez de recriar o formulário.
+**Próximo passo:** Fase 10 — **Admin** (`/admin`, seção 06, a última do briefing). Área protegida, deliberadamente simples e densa (é ferramenta, não vitrine): três telas — *Peças* (tabela com busca/criar/editar), *Pedidos* (tabela com filtro por etapa e avançar etapa, reaproveitando `lib/orders.ts`/`lib/tracking.ts`), *Lista de espera* (fila com marcar como respondida, reaproveitando `lib/waitlist.ts`). Mesmos tokens, densidade alta, sem animação. Reaproveitar o `DataTable` (`components/ui/`, já existe desde a Fase 1) para as três tabelas. Como não há backend/autenticação real, decidir como "proteger" a rota de forma honesta (ex.: mesma sessão local por e-mail da Fase 7, sem controle de acesso de verdade) antes de começar — esta é a última fase do roadmap original.
 
 **Regra a manter em toda fase daqui pra frente:** nunca nomear uma variável local `window` — 3 bugs desta sessão vieram disso (sombreia o `window` global; um deles quebrou `window.location.href` silenciosamente, sem erro de lint/TS). Use `arrivalWindow`/`itemArrivalWindow` etc.
 
@@ -35,7 +36,7 @@ Não vendemos roupa. Vendemos o acesso a uma peça que quase ninguém consegue t
 - **Windows + OneDrive:** `npm run build` às vezes falha com `EPERM: operation not permitted, rmdir '.next/...'` porque o projeto está dentro de uma pasta sincronizada pelo OneDrive. Solução: `rm -rf .next` e rodar de novo.
 - **Next dev em modo dev compila rotas sob demanda.** Na primeira visita a uma rota ainda não compilada (ex.: `/sacola` logo após o servidor subir), a navegação pode demorar mais que o esperado. Ao testar com Playwright, use `page.waitForURL(...)` em vez de `waitForTimeout` fixo após cliques que navegam.
 - **Se um teste com Playwright reportar "elemento inacessível" numa página com scroll, verifique `scrollIntoViewIfNeeded()` antes de suspeitar de bug real.** Perdi um tempo achando que o botão de desejos não funcionava — era só o elemento estar fora da viewport visível no teste (clique por coordenada não rola a página sozinho, ao contrário do `.click()` padrão do Playwright).
-- Testado com Playwright (Chromium headless) em todas as 8 fases, incluindo o fluxo de compra completo (produto → sacola → checkout → confirmação → rastreio → conta) de ponta a ponta e as rotas de drops (índice, post, 404): zero erros de console reais no estado atual.
+- Testado com Playwright (Chromium headless) em todas as 9 fases, incluindo o fluxo de compra completo (produto → sacola → checkout → confirmação → rastreio → conta) de ponta a ponta, as rotas de drops (índice, post, 404) e a lista de espera (posição na fila crescendo corretamente): zero erros de console reais no estado atual.
 
 ## Como usar este documento
 
